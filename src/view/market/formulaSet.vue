@@ -159,7 +159,9 @@
                      } else {
                      $("#btn-delAll").hide()
                      }*/
-                    return this.checkedCount == this.items.length;
+                    if(this.items!=null){
+                        return this.checkedCount == this.items.length;
+                    }
                 },
                 set: function (value) {
                     if (value) {

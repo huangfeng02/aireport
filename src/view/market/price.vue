@@ -249,7 +249,6 @@
                 var _this=this;
                 $.ajax({
                     url: '/airlogis/market/agreementprice/listAgreementPrice',
-
                     data:searchDate,
                     contentType: "application/json",
                     dataType: "json",

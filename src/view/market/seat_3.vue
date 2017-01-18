@@ -153,7 +153,8 @@
             del: function (id) {
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/market/deleteFlightInfomation?id=' + id,
+//                    url: '/airlogis/airlogis/market/deleteFlightInfomation?id=' + id,
+                    url: '/airlogis/market/flightinfomation/deleteFlightInfomation?id=' + id,
                     contentType: "application/json",
                     success: function (data) {
                         util.alertMsgTip(data.message)
@@ -166,7 +167,7 @@
             },
             delAll: function () {
                 if(this.checkedIds.length==0){
-                    util.alertMsgTip("自少选择一个")
+                    util.alertMsgTip("至少选择一个")
                     return;
                 }
                 this.del(this.checkedIds)
@@ -207,7 +208,8 @@
                 var data = JSON.stringify(this.flightInfomation);
                 console.log(data)
                 $.ajax({
-                    url: '/airlogis/airlogis/market/addFlightInfomation',
+//                    url: '/airlogis/airlogis/market/addFlightInfomation',
+                    url: '/airlogis/market/flightinfomation/addFlightInfomation',
                     contentType: "application/json",
                     dataType: "json",
                     type: "post",
@@ -226,7 +228,8 @@
             list:function(){
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/airline/listAirlineBlock',
+//                    url: '/airlogis/airlogis/airline/listAirlineBlock',
+                    url: '/airlogis/market/flightinfomation/listFlightInfomation',
                     data:searchDate,
                     contentType: "application/json",
                     dataType: "json",

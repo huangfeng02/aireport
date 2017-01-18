@@ -144,7 +144,8 @@
                 var _this=this;
                 var data = JSON.stringify(data);
                 $.ajax({
-                    url: '/airlogis/airlogis/market/addAirCompanyAttention',
+//                    url: '/airlogis/airlogis/market/addAirCompanyAttention',
+                    url: '/airlogis/market/transitprice/addTransitPrice',
                     contentType: "application/json",
                     dataType: "json",
                     type: "post",
@@ -223,7 +224,8 @@
             list:function(){
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/market/listAirCompanyAttention',
+//                    url: '/airlogis/airlogis/market/listAirCompanyAttention',
+                    url: '/airlogis/market/transitprice/listTransitPrice',
                     data:searchDate,
                     contentType: "application/json",
                     dataType: "json",

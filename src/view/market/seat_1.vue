@@ -168,7 +168,9 @@
         computed: {
             checkedAll: {
                 get: function () {
-                    return this.checkedCount == this.items.length;
+                    if(this.items!=null){
+                        return this.checkedCount == this.items.length;
+                    }
                 },
                 set: function (value) {
                     if (value) {
@@ -190,7 +192,7 @@
             del: function (id) {
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/market/addFixedPlate?id=' + id,
+                    url: '/airlogis/market/fixedplate/addFixedPlate?id=' + id,
                     contentType: "application/json",
                     success: function (data) {
                         util.alertMsgTip(data.message)
@@ -203,7 +205,7 @@
             },
             delAll: function () {
                 if(this.checkedIds.length==0){
-                    util.alertMsgTip("自少选择一个")
+                    util.alertMsgTip("至少选择一个")
                     return;
                 }
                 this.del(this.checkedIds)
@@ -242,7 +244,8 @@
                 var data = JSON.stringify(this.fixedPlate);
                 console.log(data)
                 $.ajax({
-                    url: '/airlogis/airlogis/market/addFixedPlate',
+//                    url: '/airlogis/airlogis/market/addFixedPlate',
+                    url: '/airlogis/market/fixedplate/addFixedPlate',
                     contentType: "application/json",
                     dataType: "json",
                     type: "post",
@@ -261,7 +264,7 @@
             list:function(){
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/market/listFixedPlate',
+                    url: '/airlogis/market/fixedplate/listFixedPlate',
                     data:searchDate,
                     contentType: "application/json",
                     dataType: "json",

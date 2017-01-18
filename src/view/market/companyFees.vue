@@ -1,11 +1,13 @@
 <template>
     <!-- Content Header (Page header) -->
     <section class="content-header">
+        <button data-toggle="modal" data-target="#importModal" style="margin-left: 10px;" class="btn btn-sm btn-primary pull-right" type="button">批量导入</button>
+
         <button data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-primary pull-right" type="button">添加</button>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i>首页</a></li>
             <li><a href="#">市场管理</a></li>
-            <li class="active">航司注意事项列表</li>
+            <li class="active">航司杂费列表</li>
         </ol>
     </section>
 
@@ -23,7 +25,8 @@
 
                         <div class="box-tools">
                             <div style="width: 250px;margin-top: 5px;" class="input-group input-group-sm">
-                                <input type="text" placeholder="搜索" v-model="searchKey" class="form-control pull-right" name="table_search">
+                                <input type="text" placeholder="机场名称" v-model="searchKey" class="form-control pull-right" name="table_search">
+
                                 <div class="input-group-btn">
                                     <button class="btn btn-default" type="submit" @click="search"><i class="fa fa-search"></i></button>
                                 </div>
@@ -37,38 +40,43 @@
                             <tbody>
                             <tr>
                                 <th><input type="checkbox" v-model="checkedAll"></th>
+                                <th>分类</th>
                                 <th>航空公司</th>
-                                <th>航线(C)</th>
-                                <th>是否可分泡</th>
-                                <th>分泡比例</th>
-                                <th>尺寸限制</th>
-                                <th>空运费计费规则</th>
+                                <th>航线</th>
+                                <th>目的港</th>
                                 <th>燃油计费规则</th>
+                                <th>燃油附加费单价</th>
                                 <th>燃油最低收费</th>
                                 <th>战险计费规则</th>
+                                <th>战险计费单价</th>
                                 <th>战险最低收费</th>
-                                <th>转运费计费规则</th>
-                                <th>其它规则</th>
+                                <th>信息处理费</th>
+                                <th>信息处理最低收费</th>
+                                <th>生效日期</th>
+                                <th>+5000kg价格</th>
+                                <th>运价含燃油战险</th>
+                                <th>生效日期</th>
                                 <th width="70">操作</th>
                             </tr>
                             <tr v-for="item in items">
                                 <td><input type="checkbox" :value="item.id" v-model="checkedIds"></td>
+                                <td>{{ item.category }}</td>
                                 <td>{{ item.airCompany }}</td>
                                 <td>{{ item.airline }}</td>
-                                <td>{{ item.isVolumetric }}</td>
-                                <td>{{ item.volumetricRatio }}</td>
-                                <td>{{ item.attention }}</td>
-                                <td>{{ item.airFreight }}</td>
-                                <td>{{ item.fuelSurcharge }}</td>
-                                <td>{{ item.minFuelSurcharge }}</td>
-                                <td>{{ item.securitySurcharge }}</td>
-                                <td>{{ item.minSecuritySurcharge }}</td>
-                                <td>{{ item.transitFee }}</td>
-                                <td>{{ item.otherRule }}</td>
+                                <td>{{ item.destination }}</td>
+                                <td>{{ item.fuelWay }}</td>
+                                <td>{{ item.fuelPrice }}</td>
+                                <td>{{ item.minFuelCharge }}</td>
+                                <td>{{ item.securityWay }}</td>
+                                <td>{{ item.securityPrice }}</td>
+                                <td>{{ item.minSecurityCharge }}</td>
+                                <td>{{ item.infoPrice }}</td>
+                                <td>{{ item.minInfoCharge }}</td>
+                                <td>{{ item.effectiveDate }}</td>
 
                                 <td>
                                     <i class="fa fa-fw fa-trash-o" @click="del(item.id)" title="删除"></i>
-                                    <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update"  @click="findById(item.id,item.airCompany,item.volumetricRatio,item.boradAndEq,item.bulkCargo)" title="编辑"></i>
+                                    <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update"  @click="findById(item.id)" title="编辑"></i>
                                 </td>
                             </tr>
 
@@ -90,7 +98,7 @@
     </section>
 
 
-    <company-modal :company-attention="companyAttention"></company-modal>
+    <fees-modal :fees-info="feesInfo"></fees-modal>
 
 
 </template>
@@ -99,7 +107,7 @@
 
     import pagNav from '../../components/pagination.vue'
     import util from '../../components/util.js'
-    import companyModal from './companyModal.vue'
+    import feesModal from './feesModal.vue'
 
     var searchDate={
         pageNum:1,
@@ -116,7 +124,7 @@
                 display: searchDate.pageSize,
                 current: 1,
                 searchKey:'',
-                companyAttention:''
+                feesInfo:''
             }
         },
         events: {
@@ -128,7 +136,7 @@
                 var _this=this;
                 var data = JSON.stringify(data);
                 $.ajax({
-                    url: '/airlogis/airlogis/market/editAirCompanyAttention',
+                    url: '/airlogis/market/aircompanyfees/editAirCompanyFees',
                     contentType: "application/json",
                     type: "post",
                     dataType: "json",
@@ -147,7 +155,7 @@
                 var _this=this;
                 var data = JSON.stringify(data);
                 $.ajax({
-                    url: '/airlogis/airlogis/market/addAirCompanyAttention',
+                    url: '/airlogis/market/aircompanyfees/addAirCompanyFees',
                     contentType: "application/json",
                     dataType: "json",
                     type: "post",
@@ -155,7 +163,7 @@
                     success: function (data) {
                         util.alertMsgTip(data.message)
                         $('#myModal').modal('hide')
-                        _this.list(searchDate);
+                        _this.listAirport(searchDate);
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         util.alertMsgTip(JSON.parse(xhr.responseText).message)
@@ -167,12 +175,9 @@
         computed: {
             checkedAll: {
                 get: function () {
-                    /* if (this.checkedIds.length > 0) {
-                     $("#btn-delAll").show()
-                     } else {
-                     $("#btn-delAll").hide()
-                     }*/
-                    return this.checkedCount == this.items.length;
+                    if(this.items!=null){
+                        return this.checkedCount == this.items.length;
+                    }
                 },
                 set: function (value) {
                     if (value) {
@@ -190,16 +195,17 @@
                 }
             }
         },
-        components:{pagNav,companyModal},
+        components:{pagNav,feesModal},
         methods:{
             del: function (id) {
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/market/deleteAirCompanyAttention?id=' + id,
+//                    url: '/airlogis/airline/aircompanyfees/deleteAirCompanyFees?id=' + id,
+                    url: '/airlogis/market/aircompanyfees/deleteAirCompanyFees?id=' + id,
                     contentType: "application/json",
                     success: function (data) {
                         util.alertMsgTip(data.message)
-                        _this.list(searchDate);
+                        _this.listAirport(searchDate);
                     },
                     error: function (xhr, textStatus, errorThrown) {
 
@@ -213,20 +219,31 @@
                 }
                 this.del(this.checkedIds)
             },
-            findById: function (id,airCompany,volumetricRatio,boradAndEq,bulkCargo) {
-                this.formulaInfo.id=id;
-                this.formulaInfo.airCompany=airCompany;
-                this.formulaInfo.volumetricRatio=volumetricRatio;
-                this.formulaInfo.boradAndEq=boradAndEq;
-                this.formulaInfo.bulkCargo=bulkCargo;
-                $("#btm-submit").hide()
-                $("#btm-update").show()
-                $('#myModal').modal('show')
+            findById: function (id) {
+                var _this=this;
+                $.ajax({
+                    url: '/airlogis/airlogis/airline/loadAirport?id=' + id,
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (xhr) {
+                        var data = xhr.data;
+                        _this.feesInfo=xhr.data;
+
+                        $("#btm-submit").hide()
+                        $("#btm-update").show()
+                        $('#myModal').modal('show')
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+
+                    }
+                })
+
             },
             list:function(){
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/market/listAirCompanyAttention',
+                    url: '/airlogis/market/aircompanyfees/listAirCompanyFees',
                     data:searchDate,
                     contentType: "application/json",
                     dataType: "json",

@@ -151,7 +151,7 @@
                 var _this=this;
                 var data = JSON.stringify(data);
                 $.ajax({
-                    url: '/airlogis/airlogis/market/addAirCompanyAttention',
+                    url: '/airlogis/market/pricerule/addPriceRule',
                     contentType: "application/json",
                     dataType: "json",
                     type: "post",
@@ -176,7 +176,9 @@
                      } else {
                      $("#btn-delAll").hide()
                      }*/
-                    return this.checkedCount == this.items.length;
+                    if(this.items!=null){
+                        return this.checkedCount == this.items.length
+                    }
                 },
                 set: function (value) {
                     if (value) {
@@ -230,7 +232,8 @@
             list:function(){
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/market/aircompanyattention/listAirCompanyAttention',
+//                    url: '/airlogis/market/aircompanyattention/listAirCompanyAttention',
+                    url: '/airlogis/market/pricerule/listPriceRule',
                     data:searchDate,
                     contentType: "application/json",
                     dataType: "json",

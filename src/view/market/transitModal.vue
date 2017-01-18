@@ -115,6 +115,23 @@
             },
             submit:function(){
                 this.$dispatch('submit', this.transitPrice)
+            },
+            import: function () {
+                var _this=this;
+                $.ajax({
+                    url: '/airlogis/market/transitprice/importTransitPrice',
+                    contentType: "application/json",
+                    type: "post",
+                    success: function (data) {
+                        util.alertMsgTip(data.message)
+                        $('#importModal').modal('hide')
+                        _this.list(searchDate);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+
+                    }
+                })
+                
             }
         },
         ready:function(){

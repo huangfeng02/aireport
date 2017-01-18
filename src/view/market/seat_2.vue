@@ -123,7 +123,9 @@
         computed: {
             checkedAll: {
                 get: function () {
-                    return this.checkedCount == this.items.length;
+                    if(this.items!=null){
+                        return this.checkedCount == this.items.length;
+                    }
                 },
                 set: function (value) {
                     if (value) {
@@ -145,7 +147,8 @@
             del: function (id) {
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/market/deleteSpaceSituation?id=' + id,
+//                    url: '/airlogis/airlogis/market/deleteSpaceSituation?id=' + id,
+                    url: '/airlogis/market/spacesituation/deleteSpaceSituation?id=' + id,
                     contentType: "application/json",
                     success: function (data) {
                         util.alertMsgTip(data.message)
@@ -158,7 +161,7 @@
             },
             delAll: function () {
                 if(this.checkedIds.length==0){
-                    util.alertMsgTip("自少选择一个")
+                    util.alertMsgTip("至少选择一个")
                     return;
                 }
                 this.del(this.checkedIds)
@@ -195,7 +198,8 @@
                 var data = JSON.stringify(this.spaceSituation);
                 console.log(data)
                 $.ajax({
-                    url: '/airlogis/airlogis/market/addSpaceSituation',
+//                    url: '/airlogis/airlogis/market/addSpaceSituation',
+                    url: '/airlogis/market/spacesituation/addSpaceSituation',
                     contentType: "application/json",
                     dataType: "json",
                     type: "post",
@@ -214,7 +218,7 @@
             list:function(){
                 var _this=this;
                 $.ajax({
-                    url: '/airlogis/airlogis/market/listSpaceSituation',
+                    url: '/airlogis/market/spacesituation/listSpaceSituation',
                     data:searchDate,
                     contentType: "application/json",
                     dataType: "json",
