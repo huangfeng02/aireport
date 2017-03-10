@@ -29,6 +29,8 @@
             $.ajax({
                 url: '/airlogis/sys/authority/getMenuTree?menuCode=0',
                 success: function (data) {
+                    //self.items=data.data;
+                    var data=JSON.parse(data);
                     self.items=data.data;
                 },
                 error:function(xhr,textStatus,errorThrown){
