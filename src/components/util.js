@@ -358,4 +358,12 @@ utils.getCookie=function(name){
         return null;
 }
 
+utils.isEmpty = function (str) {
+    if (str === null || str === undefined || str === '') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 module.exports=utils;

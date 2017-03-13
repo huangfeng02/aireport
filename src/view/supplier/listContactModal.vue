@@ -109,14 +109,14 @@
         props:['contactInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.contactInfo)
+                this.$emit('update', this.contactInfo)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.contactInfo)
+                this.$emit('submit', this.contactInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             console.log(this.contactInfo)
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {

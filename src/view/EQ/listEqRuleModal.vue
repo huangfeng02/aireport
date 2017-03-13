@@ -80,14 +80,14 @@
         props:['info'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.info)
+                this.$emit('update', this.info)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.info)
+                this.$emit('submit', this.info)
             }
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

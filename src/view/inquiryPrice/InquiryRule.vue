@@ -201,16 +201,10 @@
             }
 
         },
-        ready:function(){
-        },
-        route:{
-            data: function(transition){
+        mounted:function(){
 
-
-                //  this.listContact()
-                // document.title = "用户登入"
-            }
         }
+
 
     }
 

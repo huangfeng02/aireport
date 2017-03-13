@@ -71,14 +71,14 @@
         props:['receiptInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.receiptInfo)
+                this.$emit('update', this.receiptInfo)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.receiptInfo)
+                this.$emit('submit', this.receiptInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             console.log(this.receiptInfo)
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {

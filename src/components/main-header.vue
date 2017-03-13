@@ -70,7 +70,7 @@
             }
 
         },
-        ready:function(){
+        mounted:function(){
         }
     }
 

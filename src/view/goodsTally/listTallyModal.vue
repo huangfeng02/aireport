@@ -98,14 +98,14 @@
         props:['bookingInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.bookingInfo)
+                this.$emit('update', this.bookingInfo)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.bookingInfo)
+                this.$emit('submit', this.bookingInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             console.log(this.statisticsInfo)
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {

@@ -111,10 +111,10 @@
         props:['transitPrice'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.transitPrice)
+                this.$emit('update', this.transitPrice)
             },
             submit:function(){
-                this.$dispatch('submit', this.transitPrice)
+                this.$emit('submit', this.transitPrice)
             },
             import: function () {
                 var _this=this;
@@ -134,7 +134,7 @@
                 
             }
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

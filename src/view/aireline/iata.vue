@@ -73,10 +73,8 @@
         methods:{
 
         },
-        route:{
-            data: function(transition){
+        created: function(transition){
 
-            }
         }
 
     }

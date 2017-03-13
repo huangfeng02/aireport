@@ -41,7 +41,7 @@
             <!-- /.box -->
             <!--分页-->
             <div id="pagination">
-                <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
             </div>
 
         </div>
@@ -122,12 +122,6 @@
             }
         },
         components:{pagNav},
-        event:{
-            pagechange: function (p) {
-                this.current=p;
-                this.list();
-            }
-        },
         computed: {
             checkedAll: {
                 get: function () {
@@ -150,6 +144,10 @@
             }
         },
         methods:{
+            pagechange: function (p) {
+                this.current=p;
+                this.list();
+            },
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -244,7 +242,7 @@
             }
 
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             $('#myModal3').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

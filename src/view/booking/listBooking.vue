@@ -84,7 +84,7 @@
                                 <td>
                                     <i class="fa fa-fw fa-trash-o" title="删除"></i>
                                     <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update" title="编辑"></i>
-                                    <a v-link="{name:'bookingReturn'}">打回</a>
+                                    <router-link :to="{name:'bookingReturn'}">打回</router-link>
                                 </td>
                             <tr>
                                 <td><input type="checkbox"></td>
@@ -101,7 +101,8 @@
                                 <td>
                                     <i class="fa fa-fw fa-trash-o" title="删除"></i>
                                     <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update" title="编辑"></i>
-                                    <a v-link="{name:'bookingReturn'}">打回</a>
+                                    <router-link :to="{name:'bookingReturn'}">打回</router-link>
+
                                 </td>
                             <!-- <tr v-for="item in items">
                                  <td><input type="checkbox" :value="item.id" v-model="checkedIds"></td>
@@ -126,7 +127,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
             </div>
@@ -173,7 +174,28 @@
             }
         },
         components:{pagNav,listModal},
-        events: {
+        computed: {
+            checkedAll: {
+                get: function () {
+                    return this.checkedCount == this.items.length;
+                },
+                set: function (value) {
+                    if (value) {
+                        this.checkedIds = this.items.map(function (item) {
+                            return item.id
+                        })
+                    } else {
+                        this.checkedIds = []
+                    }
+                }
+            },
+            checkedCount: {
+                get: function () {
+                    return this.checkedIds.length;
+                }
+            }
+        },
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.listContact(searchDate);
@@ -217,30 +239,7 @@
                     }
                 })
 
-            }
-        },
-        computed: {
-            checkedAll: {
-                get: function () {
-                    return this.checkedCount == this.items.length;
-                },
-                set: function (value) {
-                    if (value) {
-                        this.checkedIds = this.items.map(function (item) {
-                            return item.id
-                        })
-                    } else {
-                        this.checkedIds = []
-                    }
-                }
             },
-            checkedCount: {
-                get: function () {
-                    return this.checkedIds.length;
-                }
-            }
-        },
-        methods:{
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -312,16 +311,9 @@
             }
 
         },
-        ready:function(){
-        },
-        route:{
-            data: function(transition){
-
-
-                //  this.listContact()
-                // document.title = "用户登入"
-            }
+        created:function(){
         }
+
 
     }
 

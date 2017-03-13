@@ -181,7 +181,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
             </div>
@@ -223,7 +223,28 @@
             }
         },
         components:{pagNav},
-        events: {
+        computed: {
+            checkedAll: {
+                get: function () {
+                    return this.checkedCount == this.items.length;
+                },
+                set: function (value) {
+                    if (value) {
+                        this.checkedIds = this.items.map(function (item) {
+                            return item.id
+                        })
+                    } else {
+                        this.checkedIds = []
+                    }
+                }
+            },
+            checkedCount: {
+                get: function () {
+                    return this.checkedIds.length;
+                }
+            }
+        },
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.listContact(searchDate);
@@ -267,30 +288,7 @@
                     }
                 })
 
-            }
-        },
-        computed: {
-            checkedAll: {
-                get: function () {
-                    return this.checkedCount == this.items.length;
-                },
-                set: function (value) {
-                    if (value) {
-                        this.checkedIds = this.items.map(function (item) {
-                            return item.id
-                        })
-                    } else {
-                        this.checkedIds = []
-                    }
-                }
             },
-            checkedCount: {
-                get: function () {
-                    return this.checkedIds.length;
-                }
-            }
-        },
-        methods:{
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -362,16 +360,10 @@
             }
 
         },
-        ready:function(){
-        },
-        route:{
-            data: function(transition){
+        mounted: function(){
 
-
-                //  this.listContact()
-                // document.title = "用户登入"
-            }
         }
+
 
     }
 

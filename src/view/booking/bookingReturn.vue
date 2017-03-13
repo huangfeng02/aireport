@@ -209,15 +209,7 @@
             }
 
         },
-        ready:function(){
-        },
-        route:{
-            data: function(transition){
-
-
-                //  this.listContact()
-                // document.title = "用户登入"
-            }
+        mounted:function(){
         }
 
     }

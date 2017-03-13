@@ -137,17 +137,15 @@
 
             }
         },
-
-        props:['companyAttention'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.companyAttention)
+                this.$emit('update', this.companyAttention)
             },
             submit:function(){
-                this.$dispatch('submit', this.companyAttention)
+                this.$emit('submit', this.companyAttention)
             }
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

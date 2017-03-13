@@ -56,7 +56,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
 
@@ -91,7 +91,8 @@
                 menuInfo:''
             }
         },
-        events: {
+        components:{pagNav,menuModal},
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.list(searchDate);
@@ -134,10 +135,7 @@
                     }
                 })
 
-            }
-        },
-        components:{pagNav,menuModal},
-        methods:{
+            },
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -198,14 +196,11 @@
                 })
             }
         },
-        route:{
-            data: function(transition){
-                this.list(searchDate)
-                document.title = "菜单管理"
+        created: function(){
+            this.list(searchDate)
+            document.title = "菜单管理"
 
-            }
         }
-
     }
 
 </script>

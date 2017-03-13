@@ -73,9 +73,9 @@
                                 <td>{{ item.businessLicense }}</td>
                                 <td>{{ item.status }}</td>
                                 <td>
-                                    <a v-link="{name:'listContact',query:{supplierId:item.id}}">联系人</a><br/>
-                                    <a v-link="{name:'listReceipt',query:{supplierId:item.id}}">开票信息</a><br/>
-                                    <a v-link="{name:'listContract',query:{supplierId:item.id}}">合同列表</a><br/>
+                                    <router-link :to="name:'listContact',query:{supplierId:item.id}}">联系人</router-link>
+                                    <router-link :to="name:'listReceipt',query:{supplierId:item.id}}">开票信息</router-link>
+                                    <router-link :to="name:'listContract',query:{supplierId:item.id}}">合同列表</router-link>
                                 </td>
                                 <td>
                                     <i class="fa fa-fw fa-trash-o" @click="del(item.id)" title="删除"></i>
@@ -90,7 +90,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
             </div>
@@ -139,7 +139,29 @@
                 }
             }
         },
-        events: {
+        computed: {
+            checkedAll: {
+                get: function () {
+                    return this.checkedCount == this.items.length;
+                },
+                set: function (value) {
+                    if (value) {
+                        this.checkedIds = this.items.map(function (item) {
+                            return item.id
+                        })
+                    } else {
+                        this.checkedIds = []
+                    }
+                }
+            },
+            checkedCount: {
+                get: function () {
+                    return this.checkedIds.length;
+                }
+            }
+        },
+        components:{pagNav,listModal},
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.listSupplier(searchDate);
@@ -167,7 +189,7 @@
                 var _this=this;
                 data.status=parseInt(data.status)
                 var data = JSON.stringify(data);
-               console.log(data)
+                console.log(data)
                 $.ajax({
                     url: '/airlogis/crm/supplier/addSupplier',
                     contentType: "application/json",
@@ -184,36 +206,7 @@
                     }
                 })
 
-            }
-        },
-        computed: {
-            checkedAll: {
-                get: function () {
-                    /* if (this.checkedIds.length > 0) {
-                     $("#btn-delAll").show()
-                     } else {
-                     $("#btn-delAll").hide()
-                     }*/
-                    return this.checkedCount == this.items.length;
-                },
-                set: function (value) {
-                    if (value) {
-                        this.checkedIds = this.items.map(function (item) {
-                            return item.id
-                        })
-                    } else {
-                        this.checkedIds = []
-                    }
-                }
             },
-            checkedCount: {
-                get: function () {
-                    return this.checkedIds.length;
-                }
-            }
-        },
-        components:{pagNav,listModal},
-        methods:{
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -292,12 +285,9 @@
             }
 
         },
-        route:{
-            data: function(transition){
-                this.listSupplier()
-               // document.title = "用户登入"
+        mounted: function(transition){
+            this.listSupplier()
 
-            }
         }
 
     }

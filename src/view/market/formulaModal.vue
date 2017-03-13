@@ -71,13 +71,13 @@
         props:['formulaInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.formulaInfo)
+                this.$emit('update', this.formulaInfo)
             },
             submit:function(){
-                this.$dispatch('submit', this.formulaInfo)
+                this.$emit('submit', this.formulaInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             console.log(typeof this.formulaInfo)
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {

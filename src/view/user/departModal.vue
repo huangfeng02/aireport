@@ -67,14 +67,13 @@
         props:['departmentInfo','departmentNameLists'],
         methods: {
             submit: function (event) {
-                this.$dispatch('submit', this.departmentInfo)
+                this.$emit('submit', this.departmentInfo)
             },
             update:function(data){
-                this.$dispatch('update', this.departmentInfo)
+                this.$emit('update', this.departmentInfo)
             }
         },
-        ready:function(){
-
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

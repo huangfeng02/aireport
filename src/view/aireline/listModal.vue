@@ -105,16 +105,16 @@
         props:['airportInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.airportInfo)
+                this.$emit('update', this.airportInfo)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.airportInfo)
+                this.$emit('submit', this.airportInfo)
                 console.log('this.airportInfo='+this.airportInfo)
                 return;
             }
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

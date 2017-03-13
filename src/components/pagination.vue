@@ -22,29 +22,33 @@
 
 <script>
     var paginate={
+        data () {
+            return {current : 1 }
+        },
         props: {
             total: {			// 数据总条数
-                type: null,
+                type: Number,
                 default: 10
             },
             display: {			// 每页显示条数
-                type: null,
+                type: Number,
                 default: 2
             },
-            current: {			// 当前页码
-                type: null,
-                default: 1
-            },
             pagegroup: {		// 分页条数 -- 奇数
-                type: null,
-                default: 5,
-                coerce:function(v){
-                    v = v > 0 ? v : 5;
-                    return v % 2 === 1 ? v : v + 1;
-                }
+                type: Number,
+                default: 5
+            }
+        },
+        watch: {
+            'current': function (current) {
+                this.$emit('pagechange',this.current);
             }
         },
         computed: {
+            normalizedPagegroup: function (v) {
+                v = v > 0 ? v : 5;
+                return v % 2 === 1 ? v : v + 1;
+            },
             page:function() { // 总页数
                 return Math.ceil(this.total / this.display);
             },
@@ -75,10 +79,8 @@
         },
         methods: {
             setCurrent: function(idx) {
-                console.log('aaa='+this.current)
                 if( this.current != idx && idx > 0 && idx < this.page + 1) {
                     this.current = idx;
-                    this.$dispatch('pagechange',this.current);
                 }
             }
         }

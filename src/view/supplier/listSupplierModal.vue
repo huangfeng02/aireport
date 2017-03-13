@@ -106,14 +106,14 @@
         props:['supplierInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.supplierInfo)
+                this.$emit('update', this.supplierInfo)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.supplierInfo)
+                this.$emit('submit', this.supplierInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             console.log(this.supplierInfo)
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {

@@ -1,6 +1,4 @@
 <template>
-
-
     <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-cm" role="document">
             <div class="modal-content" id="importForm">
@@ -24,7 +22,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -38,7 +35,7 @@
         //props:['airportInfo'],
         methods:{
             import:function(){
-                this.$dispatch('import')
+                this.$emit('import')
             }
         },
         ready:function(){

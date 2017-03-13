@@ -48,7 +48,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
             </div>
@@ -85,7 +85,8 @@
                 menuCodes:''
             }
         },
-        events: {
+        components:{pagNav,roleModal},
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.list(searchDate);
@@ -128,10 +129,7 @@
                     }
                 })
 
-            }
-        },
-        components:{pagNav,roleModal},
-        methods:{
+            },
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -227,14 +225,11 @@
                 })
             }
         },
-        route:{
-            data: function(transition){
-                this.list(searchDate)
-                // document.title = "用户登入"
+        created: function(transition){
+            this.list(searchDate)
+            // document.title = "用户登入"
 
-            }
         }
-
     }
 
 </script>

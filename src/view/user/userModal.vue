@@ -55,8 +55,8 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">生日</label>
                             <div class="col-sm-10">
-                                <input type="text" v-model="calendar.items.picker1.value" @click.stop="open($event,'picker1')" class="form-control" placeholder="生日">
-
+                                <calendar :value="value" :format="format" :clear-button="clear" :placeholder="placeholder" >
+                                </calendar>
                             </div>
 
                         </div>
@@ -99,20 +99,6 @@
 
                     </form>
 
-                    <calendar
-                            :show.sync="calendar.show"
-                            :type="calendar.type"
-                            :value.sync="calendar.value"
-                            :x="calendar.x"
-                            :y="calendar.y"
-                            :begin.sync="calendar.begin"
-                            :end.sync="calendar.end"
-                            :range.sync="calendar.range"
-                            :weeks="calendar.weeks"
-                            :months="calendar.months"
-                            :sep.sync="calendar.sep">
-
-                    </calendar>
                 </div>
 
 
@@ -134,95 +120,37 @@
             return{
                 departmentKey:'',
                 roleKey:'',
-                calendar:{
-                    show:false,
-                    x:0,
-                    y:0,
-                    picker:"",
-                    type:"date",
-                    value:"",
-                    begin:"",
-                    end:"",
-                    sep:"/",
-                    weeks:[],
-                    months:[],
-                    range:false,
-                    items:{
-                        // 单选模式
-                        picker1:{
-                            type:"date",
-                            begin:"1970-08-20",
-                            end:"2022-08-25",
-                            value:"2016-08-21",
-                            sep:"-",
-                            weeks:['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                            months:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        },
-                        // 2个日期模式
-                        picker2:{
-                            type:"date",
-                            value:"",
-                            range:true,
-                            sep:"."
-                        },
-                        // 日期时间模式
-                        picker3:{
-                            type:"datetime",
-                            value:"",
-                            sep:"-"
-                        },
-                        // 日期时间模式
-                        picker4:{
-                            type:"time",
-                            value:""
-                        }
-                    }
-                }
+                value: '',
+                format: 'yyyy-MM-dd',
+                clear: true,
+                placeholder: '生日'
             }
         },
         components:{calendar},
         props:['departments','roles','userInfo'],
         watch:{
-            'calendar.value': function (value) {
-                this.calendar.items[this.calendar.picker].value=value
+            'value': function (value) {
+                this.value=value
             }
         },
         methods: {
-            open:function(e,type){
-                this.calendar.picker=type
-                this.calendar.type=this.calendar.items[type].type;
-                this.calendar.range=this.calendar.items[type].range;
-                this.calendar.begin=this.calendar.items[type].begin;
-                this.calendar.end=this.calendar.items[type].end;
-                this.calendar.value=this.calendar.items[type].value;
-                // 可不用写
-                this.calendar.sep=this.calendar.items[type].sep;
-                this.calendar.weeks=this.calendar.items[type].weeks;
-                this.calendar.months=this.calendar.items[type].months;
-
-                this.calendar.show=true;
-                this.calendar.x=e.target.offsetLeft;
-                this.calendar.y=e.target.offsetTop+e.target.offsetHeight+8
-            },
             submit: function (event) {
-                this.$dispatch('submit', this.userInfo)
+                this.$emit('submit', this.userInfo)
             },
-            update:function(data){
-                this.$dispatch('update', this.userInfo)
+            update:function(data) {
+                this.$emit('update', this.userInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             this.departmentKey=this.userInfo.departmentKey;
             this.roleKey=this.userInfo.roleKey;
-            this.calendar.items.picker1.value=this.userInfo.birthday;
-            console.log(this.departmentKey)
+            this.value=this.userInfo.birthday;
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空
                 for (var sProp in _this.userInfo) {
                     _this.userInfo[sProp]='';
                 }
-                _this.calendar.items.picker1.value='';
                 $("#btm-submit").show()
                 $("#btm-update").hide()
             })

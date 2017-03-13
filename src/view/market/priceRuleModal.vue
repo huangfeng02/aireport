@@ -143,13 +143,13 @@
         props:['priceRule'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.priceRule)
+                this.$emit('update', this.priceRule)
             },
             submit:function(){
-                this.$dispatch('submit', this.priceRule)
+                this.$emit('submit', this.priceRule)
             }
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

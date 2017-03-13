@@ -93,24 +93,28 @@
         props:['statisticsInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.statisticsInfo)
+                this.$emit('update', this.statisticsInfo)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.statisticsInfo)
+                this.$emit('submit', this.statisticsInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             console.log(this.statisticsInfo)
             var _this=this;
-            $('#myModal').on('hidden.bs.modal', function (e) {
-                //重置属性值为空
-                for (var sProp in _this.statisticsInfo) {
-                    _this.statisticsInfo[sProp]='';
-                }
-                $("#btm-submit").show()
-                $("#btm-update").hide()
+            this.$nextTick(function () {
+                $('#myModal').on('hidden.bs.modal', function (e) {
+                    //重置属性值为空
+                    for (var sProp in _this.statisticsInfo) {
+                        _this.statisticsInfo[sProp]='';
+                    }
+                    $("#btm-submit").show()
+                    $("#btm-update").hide()
+                })
+                // code that assumes this.$el is in-document
             })
+
 
         }
 

@@ -80,14 +80,14 @@
         props:['ruleInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.ruleInfo)
+                this.$emit('update', this.ruleInfo)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.ruleInfo)
+                this.$emit('submit', this.ruleInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             console.log(this.statisticsInfo)
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {

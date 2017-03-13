@@ -41,9 +41,9 @@
                                 <td><input type="checkbox" :value="item.id" v-model="checkedIds"></td>
                                 <td>{{ item.userName }}</td>
                                 <td>{{ item.jobNumber }}</td>
-                                <td v-if="item.gender==1">男</td>
-                                <td v-if="item.gender==2">女</td>
-                                <td v-if="item.gender==0">未知</td>
+                                <td v-if="item.sex==1">男</td>
+                                <td v-else-if="item.sex==2">女</td>
+                                <td v-else>未知</td>
                                 <td>{{ item.email }}</td>
                                 <td>{{ item.mobile }}</td>
                                 <td>{{ item.tel }}</td>
@@ -67,7 +67,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
             </div>
@@ -104,7 +104,34 @@
                 roles:''
             }
         },
-        events: {
+        computed: {
+            checkedAll: {
+                get: function () {
+                    /* if (this.checkedIds.length > 0) {
+                     $("#btn-delAll").show()
+                     } else {
+                     $("#btn-delAll").hide()
+                     }*/
+                    return this.checkedCount == this.items.length;
+                },
+                set: function (value) {
+                    if (value) {
+                        this.checkedIds = this.items.map(function (item) {
+                            return item.id
+                        })
+                    } else {
+                        this.checkedIds = []
+                    }
+                }
+            },
+            checkedCount: {
+                get: function () {
+                    return this.checkedIds.length;
+                }
+            }
+        },
+        components:{pagNav,userModal},
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.list(searchDate);
@@ -147,36 +174,7 @@
                     }
                 })
 
-            }
-        },
-        computed: {
-            checkedAll: {
-                get: function () {
-                    /* if (this.checkedIds.length > 0) {
-                     $("#btn-delAll").show()
-                     } else {
-                     $("#btn-delAll").hide()
-                     }*/
-                    return this.checkedCount == this.items.length;
-                },
-                set: function (value) {
-                    if (value) {
-                        this.checkedIds = this.items.map(function (item) {
-                            return item.id
-                        })
-                    } else {
-                        this.checkedIds = []
-                    }
-                }
             },
-            checkedCount: {
-                get: function () {
-                    return this.checkedIds.length;
-                }
-            }
-        },
-        components:{pagNav,userModal},
-        methods:{
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -266,15 +264,13 @@
                 })
             }
         },
-        route:{
-            data: function(transition){
-                this.list(searchDate)
-                this.listRole()
-                this.listDepartment()
-                console.log('current',this.current)
-                // document.title = "用户登入"
+        created : function(){
+            this.list(searchDate)
+            this.listRole()
+            this.listDepartment()
+            console.log('current',this.current)
+            // document.title = "用户登入"
 
-            }
         }
 
     }

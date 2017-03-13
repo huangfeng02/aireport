@@ -41,14 +41,14 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">起飞时刻</label>
                                 <div class="col-sm-8">
-                                    <input type="text" v-model="calendar.items.picker5.value" @click.stop="open($event,'picker5')" class="form-control" placeholder="起飞时刻">
+                                    <calendar :value="value5" :format="format" :clear-button="clear" :placeholder="到达时刻" ></calendar>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">到达时刻</label>
                                 <div class="col-sm-8">
-                                    <input type="text" v-model="calendar.items.picker6.value" @click.stop="open($event,'picker6')" class="form-control" placeholder="到达时刻">
+                                    <calendar :value="value6" :format="format" :clear-button="clear" :placeholder="到达时刻" ></calendar>
                                 </div>
                             </div>
 
@@ -69,27 +69,14 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">开始日期</label>
                                 <div class="col-sm-8">
-                                    <input type="text" v-model="calendar.items.picker3.value" @click.stop="open($event,'picker3')" class="form-control" placeholder="开始日期">
+                                    <calendar :value="value3" :format="format" :clear-button="clear" :placeholder="开始日期" ></calendar>
                                 </div>
                             </div>
-                            <calendar
-                                    :show.sync="calendar.show"
-                                    :type="calendar.type"
-                                    :value.sync="calendar.value"
-                                    :x="calendar.x"
-                                    :y="calendar.y"
-                                    :begin.sync="calendar.begin"
-                                    :end.sync="calendar.end"
-                                    :range.sync="calendar.range"
-                                    :weeks="calendar.weeks"
-                                    :months="calendar.months"
-                                    :sep.sync="calendar.sep">
 
-                            </calendar>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">截止日期</label>
                                 <div class="col-sm-8">
-                                    <input type="text" v-model="calendar.items.picker4.value" @click.stop="open($event,'picker4')" class="form-control" placeholder="截止日期">
+                                    <calendar :value="value4" :format="format" :clear-button="clear" :placeholder="截止日期" ></calendar>
                                 </div>
                             </div>
 
@@ -117,113 +104,44 @@
     export default {
         data:function(){
             return{
-                calendar:{
-                    show:false,
-                    x:0,
-                    y:0,
-                    picker:"",
-                    type:"date",
-                    value:"",
-                    begin:"",
-                    end:"",
-                    sep:"/",
-                    weeks:[],
-                    months:[],
-                    range:false,
-                    items:{
-                        // 单选模式
-                        picker1:{
-                            type:"date",
-                            begin:"2016-08-20",
-                            end:"2016-08-25",
-                            value:"2016-08-21",
-                            sep:"-",
-                            weeks:['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                            months:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        },
-                        // 2个日期模式
-                        picker2:{
-                            type:"date",
-                            value:"",
-                            range:true,
-                            sep:"."
-                        },
-                        // 日期时间模式
-                        picker3:{
-                            type:"datetime",
-                            value:"",
-                            sep:"-"
-                        },
-                        picker4:{
-                            type:"datetime",
-                            value:"",
-                            sep:"-"
-                        },
-                        picker5:{
-                            type:"datetime",
-                            value:"",
-                            sep:"-"
-                        },
-                        picker6:{
-                            type:"datetime",
-                            value:"",
-                            sep:"-"
-                        },
-                        // 日期时间模式
-                        picker7:{
-                            type:"time",
-                            value:""
-                        }
-                    }
-                }
+                value3: '',
+                value4: '',
+                value5: '',
+                value6: '',
+                format: 'yyyy-MM-dd',
+                clear: true
             }
         },
         components:{
             calendar
         },
         watch:{
-            'calendar.value': function (value) {
-                this.calendar.items[this.calendar.picker].value=value
+            'value': function (value) {
+                this.value=value
             }
         },
         props:['scheduleInfo'],
         methods:{
-            open:function(e,type){
-                this.calendar.picker=type
-                this.calendar.type=this.calendar.items[type].type
-                this.calendar.range=this.calendar.items[type].range
-                this.calendar.begin=this.calendar.items[type].begin
-                this.calendar.end=this.calendar.items[type].end
-                this.calendar.value=this.calendar.items[type].value
-                // 可不用写
-                this.calendar.sep=this.calendar.items[type].sep
-                this.calendar.weeks=this.calendar.items[type].weeks
-                this.calendar.months=this.calendar.items[type].months
-
-                this.calendar.show=true
-                this.calendar.x=e.target.offsetLeft
-                this.calendar.y=e.target.offsetTop+e.target.offsetHeight+8
-            },
             update:function(){
-                this.scheduleInfo.startTime=this.calendar.items.picker3.value;
-                this.scheduleInfo.endTime=this.calendar.items.picker4.value;
-                this.scheduleInfo.departureTime=this.calendar.items.picker5.value;
-                this.scheduleInfo.arrivalTime=this.calendar.items.picker6.value;
-                this.$dispatch('update', this.scheduleInfo)
+                this.scheduleInfo.startTime=this.value3;
+                this.scheduleInfo.endTime=this.value4;
+                this.scheduleInfo.departureTime=this.value5;
+                this.scheduleInfo.arrivalTime=this.value6;
+                this.$emit('update', this.scheduleInfo)
             },
             submit:function(){
-                this.scheduleInfo.startTime=this.calendar.items.picker3.value;
-                this.scheduleInfo.endTime=this.calendar.items.picker4.value;
-                this.scheduleInfo.departureTime=this.calendar.items.picker5.value;
-                this.scheduleInfo.arrivalTime=this.calendar.items.picker6.value;
-                this.$dispatch('submit', this.scheduleInfo)
+                this.scheduleInfo.startTime=this.value3;
+                this.scheduleInfo.endTime=this.value4;
+                this.scheduleInfo.departureTime=this.value5;
+                this.scheduleInfo.arrivalTime=this.value6;
+                this.$emit('submit', this.scheduleInfo)
             }
         },
-        ready:function(){
-            this.calendar.items.picker3.value=this.scheduleInfo.startTime;
-            this.calendar.items.picker4.value=this.scheduleInfo.endTime;
-            this.calendar.items.picker5.value=this.scheduleInfo.departureTime;
-            this.calendar.items.picker6.value=this.scheduleInfo.arrivalTime;
+        mounted:function(){
+            this.value3=this.scheduleInfo.startTime;
+            this.value4=this.scheduleInfo.endTime;
+            this.value5=this.scheduleInfo.departureTime;
+            this.value6=this.scheduleInfo.arrivalTime;
 
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
@@ -231,10 +149,10 @@
                 for (var sProp in _this.scheduleInfo) {
                     _this.scheduleInfo[sProp]='';
                 }
-                _this.calendar.items.picker3.value='';
-                _this.calendar.items.picker4.value='';
-                _this.calendar.items.picker5.value='';
-                _this.calendar.items.picker6.value='';
+                _this.value3.value='';
+                _this.value4.value='';
+                _this.value5.value='';
+                _this.value6.value='';
                 $("#btm-submit").show()
                 $("#btm-update").hide()
             })

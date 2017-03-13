@@ -7,8 +7,6 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">规则录入</h4>
                 </div>
-
-
                 <div class="modal-body">
                     <validator name="validation1">
                         <form class="form-horizontal">
@@ -80,14 +78,14 @@
         props:['info'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.info)
+                this.$emit('update', this.info)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.info)
+                this.$emit('submit', this.info)
             }
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

@@ -87,7 +87,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
             </div>
@@ -131,6 +131,32 @@
             }
         },
         events: {
+
+        },
+        computed: {
+
+            checkedAll: {
+                get: function () {
+                    return this.checkedCount == this.items.length;
+                },
+                set: function (value) {
+                    if (value) {
+                        this.checkedIds = this.items.map(function (item) {
+                            return item.id
+                        })
+                    } else {
+                        this.checkedIds = []
+                    }
+                }
+            },
+            checkedCount: {
+                get: function () {
+                    return this.checkedIds.length;
+                }
+            }
+        },
+        components:{pagNav,listModal,listModalImport},
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.current=p;
@@ -177,36 +203,7 @@
             },
             import:function(){
                 $('#importModal').modal('hide')
-            }
-        },
-        computed: {
-            checkedAll: {
-                get: function () {
-                    /* if (this.checkedIds.length > 0) {
-                     $("#btn-delAll").show()
-                     } else {
-                     $("#btn-delAll").hide()
-                     }*/
-                    return this.checkedCount == this.items.length;
-                },
-                set: function (value) {
-                    if (value) {
-                        this.checkedIds = this.items.map(function (item) {
-                            return item.id
-                        })
-                    } else {
-                        this.checkedIds = []
-                    }
-                }
             },
-            checkedCount: {
-                get: function () {
-                    return this.checkedIds.length;
-                }
-            }
-        },
-        components:{pagNav,listModal,listModalImport},
-        methods:{
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -285,14 +282,9 @@
             }
 
         },
-        route:{
-            data: function(transition){
-                this.listAirport()
-               // document.title = "用户登入"
-
-            }
+        created: function(transition){
+            this.listAirport()
         }
-
     }
 
 </script>

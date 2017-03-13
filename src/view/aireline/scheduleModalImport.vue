@@ -38,10 +38,10 @@
         //props:['airportInfo'],
         methods:{
             import:function(){
-                this.$dispatch('import')
+                this.$emit('import')
             }
         },
-        ready:function(){
+        mounted:function(){
 
 
         }

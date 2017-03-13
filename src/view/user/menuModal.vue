@@ -91,14 +91,13 @@
         props:['menuInfo'],
         methods: {
             submit: function (event) {
-                this.$dispatch('submit', this.menuInfo)
+                this.$emit('submit', this.menuInfo)
             },
             update:function(data){
-                this.$dispatch('update', this.menuInfo)
+                this.$emit('update', this.menuInfo)
             }
         },
-        ready:function(){
-
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空

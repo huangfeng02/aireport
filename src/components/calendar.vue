@@ -1,596 +1,662 @@
-<style scoped>
-.calendar {
-    width: 300px;
-    padding: 10px;
-    background: #fff;
-    position: absolute;
-    border: 1px solid #DEDEDE;
-    border-radius: 2px;
-    opacity:.95;
-    transition: all .5s ease;
-}
-.calendar-enter, .calendar-leave {
-    opacity: 0;
-    transform: translate3d(0,-10px, 0);
-}
-.calendar:before {
-    position: absolute;
-    left:30px;
-    top: -10px;
-    content: "";
-    border:5px solid rgba(0, 0, 0, 0);
-    border-bottom-color: #DEDEDE;
-}
-.calendar:after {
-    position: absolute;
-    left:30px;
-    top: -9px;
-    content: "";
-    border:5px solid rgba(0, 0, 0, 0);
-    border-bottom-color: #fff;
-}
-
-.calendar-tools{
-    height:32px;
-    font-size: 20px;
-    line-height: 32px;
-    color:#5e7a88;
-}
-.calendar-tools .float.left{
-    float:left;
-}
-.calendar-tools .float.right{
-    float:right;
-}
-.calendar-tools input{
-    font-size: 20px;
-    line-height: 32px;
-    color: #5e7a88;
-    width: 70px;
-    text-align: center;
-    border:none;
-    background-color: transparent;
-}
-.calendar-tools span{
-    cursor: pointer;
-}
-.calendar-prev{
-    float:left;
-}
-.calendar-next{
-    float:right;
-}
- 
-
-.calendar table {
-    clear: both;
-    width: 100%;
-    margin-bottom:10px;
-    border-collapse: collapse;
-    color: #444444;
-}
-.calendar td {
-    margin:2px !important;
-    padding:0px 0;
-    width: 14.28571429%;
-    height:34px;
-    text-align: center;
-    vertical-align: middle;
-    font-size:14px;
-    line-height: 125%;
-    cursor: pointer;
-}
-
-.calendar td.week{
-    pointer-events:none !important;
-    cursor: default !important;    
-}
-.calendar td.disabled {
-    color: #c0c0c0;
-    pointer-events:none !important;
-    cursor: default !important;
-}
-.calendar td span{
-    display:block;
-    height:30px;
-    line-height:30px;
-    margin:2px;
-    border-radius:2px;
-}
-.calendar td span:hover{
-    background:#f3f8fa;
-}
-.calendar td.selected span{
-    background-color: #5e7a88;
-    color: #fff;
-}
-.calendar td.selected span:hover{
-    background-color: #5e7a88;
-    color: #fff;
-}
-
-.calendar thead td {
-  text-transform: uppercase;
-}
-.calendar .timer{
-    margin:10px 0;
-    text-align: center;
-}
-.calendar .timer input{
-    border-radius: 2px;
-    padding:5px;
-    font-size: 14px;
-    line-height: 18px;
-    color: #5e7a88;
-    width: 50px;
-    text-align: center;
-    border:1px solid #efefef;
-}
-.calendar .timer input:focus{
-    border:1px solid #5e7a88;
-}
-.calendar-button{
-    text-align: center;
-}
-
-.calendar-button span{
-    cursor: pointer;
-    display: inline-block;
-    min-height: 1em;
-    min-width: 5em;
-    vertical-align: baseline;
-    background:#5e7a88;
-    color:#fff;
-    margin: 0 .25em 0 0;
-    padding: .6em 2em;
-    font-size: 1em;
-    line-height: 1em;
-    text-align: center;
-    border-radius: .3em;
-}
-.calendar-button span.cancel{
-    background:#efefef;
-    color:#666;
-}
-
-.calendar .lunar{
-     font-size:11px;
-     line-height: 150%;
-     color:#aaa;   
-}
-.calendar td.selected .lunar{
-     color:#fff;   
-}
-</style>
-
 <template>
-    <div @click.stop=""  class="calendar" v-show="show" :style="{'left':x+'px','top':y+'px'}" transition="calendar" transition-mode="out-in">
-        <div  v-if="type!='time'">
-            <div class="calendar-tools">
-                <span class="calendar-prev" @click="prev">
-                    <svg width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g class="transform-group"><g transform="scale(0.015625, 0.015625)"><path d="M671.968 912c-12.288 0-24.576-4.672-33.952-14.048L286.048 545.984c-18.752-18.72-18.752-49.12 0-67.872l351.968-352c18.752-18.752 49.12-18.752 67.872 0 18.752 18.72 18.752 49.12 0 67.872l-318.016 318.048 318.016 318.016c18.752 18.752 18.752 49.12 0 67.872C696.544 907.328 684.256 912 671.968 912z" fill="#5e7a88"></path></g></g></svg>
-                </span>
-                <span class="calendar-next"  @click="next">
-                    <svg width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g class="transform-group"><g transform="scale(0.015625, 0.015625)"><path d="M761.056 532.128c0.512-0.992 1.344-1.824 1.792-2.848 8.8-18.304 5.92-40.704-9.664-55.424L399.936 139.744c-19.264-18.208-49.632-17.344-67.872 1.888-18.208 19.264-17.376 49.632 1.888 67.872l316.96 299.84-315.712 304.288c-19.072 18.4-19.648 48.768-1.248 67.872 9.408 9.792 21.984 14.688 34.56 14.688 12 0 24-4.48 33.312-13.44l350.048-337.376c0.672-0.672 0.928-1.6 1.6-2.304 0.512-0.48 1.056-0.832 1.568-1.344C757.76 538.88 759.2 535.392 761.056 532.128z" fill="#5e7a88"></path></g></g></svg>
-                </span>
-                <div class="text center">
-                    <input type="text" v-model="year" value="{{year}}" @change="render(year,month)" min="1970" max="2100" maxlength="4">
-                     / 
-                    {{monthString}}
-                </div>
+  <div class="datepicker">
+    <template v-if="hasInput">
+      <input class="form-control datepicker-input" :class="{'with-reset-button': clearButton}" type="text" :placeholder="placeholder"
+      :style="{width:width}"
+      @click="inputClick"
+      v-model="inputValue"/>
+      <button v-if="clearButton && value" type="button" class="close" @click="inputValue = ''">
+        <span>&times;</span>
+      </button>
+    </template>
+    <div class="datepicker-popup" :style="paneStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOver" v-show="displayDayView">
+      <div class="datepicker-ctrl">
+        <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextMonthClick(0)"></span>
+        <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextMonthClick(1)"></span>
+      </div>
+      <template v-for="(p, pan) in pane" >
+        <div class="datepicker-inner">
+          <div class="datepicker-body">
+            <p @click="switchMonthView">{{stringifyDayHeader(currDate, pan)}}</p>
+            <div class="datepicker-weekRange">
+              <span v-for="w in text.daysOfWeek">{{w}}</span>
             </div>
-            <table cellpadding="5">
-            <thead>
-                <tr>
-                    <td v-for="week in weeks" class="week">{{week}}</td>
-                </tr>
-             </thead>
-            <tr v-for="(k1,day) in days">
-                <td 
-                v-for="(k2,child) in day" 
-                :class="{'selected':child.selected,'disabled':child.disabled}"
-                @click="select(k1,k2,$event)" @touchstart="select(k1,k2,$event)">
-                <span>{{child.day}}</span>
-                <div class="lunar" v-if="showLunar">{{child.lunar}}</div>
-                </td>
-            </tr>
-            </table>
-        </div>
-        <div class="calendar-time" v-show="type=='datetime'||type=='time'">
- 
-            <div class="timer">
-                <input type="text" v-model="hour" value="{{hour}}" min="0" max="23" maxlength="2">
-                时
-                <input type="text" v-model="minute" value="{{minute}}" min="0" max="59" maxlength="2">
-                分
-                <input type="text" v-model="second" value="{{second}}" min="0" max="59" maxlength="2">
-                秒
+            <div class="datepicker-dateRange">
+              <span v-for="d in dateRange[pan]" class="day-cell" :class="getItemClasses(d)" :data-date="stringify(d.date)" @click="daySelect(d.date, $event)"><div>
+                <template v-if="d.sclass !== 'datepicker-item-gray'">
+                  {{getSpecailDay(d.date) || d.text}}
+                </template>
+                <template v-else>
+                  {{d.text}}
+                </template>
+                <div v-if="d.sclass !== 'datepicker-item-gray'"><slot :name="stringify(d.date)"></slot></div></div>
+              </span>
             </div>
+          </div>
         </div>
-        <div class="calendar-button" v-show="type=='datetime'||type=='time'||range">
-            <span @click="ok">确定</span>
-            <span @click="cancel" class="cancel">取消</span>
-        </div>
+      </template>
     </div>
+    <div class="datepicker-popup" :style="paneStyle" v-show="displayMonthView">
+      <div class="datepicker-ctrl">
+        <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextYearClick(0)"></span>
+        <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextYearClick(1)"></span>
+      </div>
+      <template v-for="(p, pan) in pane" >
+        <div class="datepicker-inner">
+          <div class="datepicker-body">
+            <p @click="switchDecadeView">{{stringifyYearHeader(currDate, pan)}}</p>
+            <div class="datepicker-monthRange">
+              <template v-for="(m, index) in text.months">
+                <span :class="{'datepicker-dateRange-item-active':
+                (text.months[parse(value).getMonth()]  === m) &&
+                currDate.getFullYear() + pan === parse(value).getFullYear()}"
+                @click="monthSelect(stringifyYearHeader(currDate, pan), index)"
+                >{{m.substr(0,3)}}</span>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="datepicker-popup" :style="paneStyle" v-show="displayYearView">
+      <div class="datepicker-ctrl">
+        <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextDecadeClick(0)"></span>
+        <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextDecadeClick(1)"></span>
+      </div>
+      <template v-for="(p, pan) in pane" >
+        <div class="datepicker-inner">
+          <div class="datepicker-body">
+            <p>{{stringifyDecadeHeader(currDate, pan)}}</p>
+            <div class="datepicker-monthRange decadeRange">
+              <template v-for="decade in decadeRange[pan]">
+                <span :class="{'datepicker-dateRange-item-active':
+                parse(inputValue).getFullYear() === decade.text}"
+                @click.stop="yearSelect(decade.text)"
+                >{{decade.text}}</span>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
 </template>
 
 <script>
-export default {
+  export default {
+    name: 'calendar',
     props: {
-        show: {
-            type: Boolean,
-            twoWay: true,
-            default: false
-        },
-        type: {
-            type: String,
-            default: "date"
-        },
-        value: {
-            type: String,
-            twoWay: true,
-            default: ""
-        },
-        x: {
-            type: Number,
-            default: 0
-        },
-        y: {
-            type: Number,
-            default: 0
-        },
-        begin: {
-            type: String,
-            twoWay: true,
-            default: ""
-        },
-        end: {
-            type: String,
-            default: ""
-        },
-        range: {
-            type: Boolean,
-            default: false
-        },
-        rangeBegin: {
-            type: Array,
-            default: Array
-        },
-        rangeEnd: {
-            type: Array,
-            default: Array
-        },
-        sep:{
-            type: String,
-            twoWay: true,
-            default: ""
-        },
-        weeks: {
-            type: Array,
-            default:function(){
-                return ['日', '一', '二', '三', '四', '五', '六']
-            }
-        },
-        months:{
-            type: Array,
-            default:function(){
-                return ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
-            }
+      value: {
+        type: String
+      },
+      format: {
+        default: 'MM/dd/yyyy'
+      },
+      disabledDaysOfWeek: {
+        type: Array,
+        default () {
+          return []
         }
-    },
-    data() {
-        return {
-            year: 0,
-            month: 0,
-            day: 0,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            days: [],
-            today: [],
-            currentMonth: Number,
-            monthString:"",
+      },
+      width: {
+        type: String,
+        default: '200px'
+      },
+      clearButton: {
+        type: Boolean,
+        default: false
+      },
+      lang: {
+        type: String,
+        default: navigator.language
+      },
+      placeholder: {
+        type: String
+      },
+      hasInput: {
+        type: Boolean,
+        default: true
+      },
+      pane: {
+        type: Number,
+        default: 1
+      },
+      borderWidth: {
+        type: Number,
+        default: 2
+      },
+      onDayClick: {
+        type: Function,
+        default () {}
+      },
+      changePane: {
+        type: Function,
+        default () {}
+      },
+      specialDays: {
+        type: Object,
+        default () {
+          return {}
         }
+      },
+      rangeBus: {
+        type: Function,
+        default () {
+        // return new Vue()
+      }
     },
-    created() {
-        this.init()
-        // 延迟绑定事件，防止关闭
-        window.setTimeout(() => {
-            document.addEventListener('click', (e) => {
-                e.stopPropagation()
-                this.cancel()
-            }, false)
-        }, 500)
-    },
-    // 测试用
-    watch: {
-        // year(val, old) {
-        //     console.log("new %s old %s time:%s", val, old, +new Date)
-        // },
-        show(){
-            this.init()
-        },
-        value(){
-            this.init()
-        }
-    },
-    methods: {
-        // 日期补零
-        zero(n) {
-            return n < 10 ? '0' + n : n
-        },
-        // 初始化一些东西
-        init(){
-            var now = new Date();
-            if (this.value != "") {
-                if (this.value.indexOf("-") != -1) this.sep = "-"
-                if (this.value.indexOf(".") != -1) this.sep = "."
-                if (this.value.indexOf("/") != -1) this.sep = "/"
-                if (this.type == "date") {
-                    var split = this.value.split(this.sep)
-                    this.year = parseInt(split[0])
-                    this.month = parseInt(split[1]) - 1
-                    this.day = parseInt(split[2])
-                } else if (this.type == "datetime") {
-                    var split = this.value.split(" ")
-                    var splitDate = split[0].split(this.sep)
-                    this.year = parseInt(splitDate[0])
-                    this.month = parseInt(splitDate[1]) - 1
-                    this.day = parseInt(splitDate[2])
-                    if (split.length > 1) {
-                        var splitTime = split[1].split(":")
-                        this.hour = splitTime[0]
-                        this.minute = splitTime[1]
-                        this.second = splitTime[2]
-                    }
-                }
-                if (this.range) {
-                    var split = this.value.split(" ~ ")
-                    if (split.length > 1) {
-                        var beginSplit = split[0].split(this.sep)
-                        var endSplit = split[1].split(this.sep)
-                        this.rangeBegin = [parseInt(beginSplit[0]), parseInt(beginSplit[1] - 1), parseInt(beginSplit[2])]
-                        this.rangeEnd = [parseInt(endSplit[0]), parseInt(endSplit[1] - 1), parseInt(endSplit[2])]
-                    }
-                }
-            } else {
-                if(this.sep=="")this.sep = "/"
-                this.year = now.getFullYear()
-                this.month = now.getMonth()
-                this.day = now.getDate()
-                this.hour = this.zero(now.getHours())
-                this.minute = this.zero(now.getMinutes())
-                this.second = this.zero(now.getSeconds())
-                if (this.range) {
-                    this.rangeBegin = Array
-                    this.rangeEnd = Array
-                }
-            }
-            this.monthString=this.months[this.month]
-            this.render(this.year, this.month)
-        },
-        // 渲染日期
-        render(y, m) {
-            if (!this.range) {
-                this.rangeBegin = []
-                this.rangeEnd = []
-            }
-            var firstDayOfMonth = new Date(y, m, 1).getDay()         //当月第一天
-            var lastDateOfMonth = new Date(y, m + 1, 0).getDate()    //当月最后一天
-            var lastDayOfLastMonth = new Date(y, m, 0).getDate()     //最后一月的最后一天
-            this.year = y
-            this.currentMonth = this.months[m]
-            var seletSplit = this.value.split(" ")[0].split(this.sep)
-
-            var i, line = 0,temp = []
-            for (i = 1; i <= lastDateOfMonth; i++) {
-                var dow = new Date(y, m, i).getDay()
-                // 第一行
-                if (dow == 0) {
-                    temp[line] = []
-                } else if (i == 1) {
-                    temp[line] = []
-                    var k = lastDayOfLastMonth - firstDayOfMonth + 1
-                    for (var j = 0; j < firstDayOfMonth; j++) {
-                        temp[line].push({
-                            day: k,
-                            disabled: true
-                        })
-                        k++;
-                    }
-                }
-       
-                // 如果是日期范围
-                if (this.range) {
-                    var options = {
-                        day: i
-                    }
-                    if (this.rangeBegin.length > 0) {
-                        var beginTime = Number(new Date(this.rangeBegin[0], this.rangeBegin[1], this.rangeBegin[2]))
-                        var endTime = Number(new Date(this.rangeEnd[0], this.rangeEnd[1], this.rangeEnd[2]))
-                        var thisTime = Number(new Date(this.year, this.month, i))
-                        if (beginTime <= thisTime && endTime >= thisTime) {
-                            options.selected = true
-                        }
-                    }
-                    temp[line].push(options)
-                } else {
-                    // 单选模式
-                    var chk = new Date()
-                    var chkY = chk.getFullYear()
-                    var chkM = chk.getMonth()
-                    // 匹配上次选中的日期
-                    if (
-                        parseInt(seletSplit[0]) == this.year &&
-                        parseInt(seletSplit[1]) - 1 == this.month &&
-                        parseInt(seletSplit[2]) == i) {
-                        temp[line].push({
-                            day: i,
-                            selected: true
-                        })
-                        this.today = [line, temp[line].length - 1]
-                    }
-
-                     // 没有默认值的时候显示选中今天日期
-                    else if (chkY == this.year && chkM == this.month && i == this.day && this.value == "") {
-                        temp[line].push({
-                            day: i,
-                            selected: true
-                        })
-                        this.today = [line, temp[line].length - 1]
-                    }else{
-                        // 设置可选范围
-                        // console.log(this.begin,this.end);
-                         var options = {
-                            day: i,
-                            selected: false,
-                        }
-                        if (this.begin != "") {
-
-                            var beginSplit = this.begin.split(this.sep)
-                            var beginTime = Number(new Date(
-                                parseInt(beginSplit[0]),
-                                parseInt(beginSplit[1]) - 1,
-                                parseInt(beginSplit[2])
-                            ))
-                            if (beginTime > Number(new Date(this.year, this.month, i))) options.disabled = true
-                        }
-                        if (this.end != ""){
-                            var endSplit = this.end.split(this.sep)
-                            var endTime = Number(new Date(
-                                parseInt(endSplit[0]),
-                                parseInt(endSplit[1]) - 1,
-                                parseInt(endSplit[2])
-                            ))
-                            if (endTime <  Number(new Date(this.year, this.month, i))) options.disabled = true
-                        }
-                        temp[line].push(options)
-                    }
-                }
-
-                // 最后一行
-                if (dow == 6) {
-                    line++
-                } else if (i == lastDateOfMonth) {
-                    var k = 1
-                    for (dow; dow < 6; dow++) {
-                        temp[line].push({
-                            day: k,
-                            disabled: true
-                        })
-                        k++
-                    }
-                }
-            } //end for
-
-            this.days = temp
-        },
-        // 上月
-        prev(e) {
-            e.stopPropagation()
-            if (this.month == 0) {
-                this.month = 11
-                this.year = parseInt(this.year) - 1
-            } else {
-                this.month = parseInt(this.month) - 1
-            }
-            this.monthString=this.months[this.month]
-            this.render(this.year, this.month)
-        },
-        //  下月
-        next(e) {
-            e.stopPropagation()
-            if (this.month == 11) {
-                this.month = 0
-                this.year = parseInt(this.year) + 1
-            } else {
-                this.month = parseInt(this.month) + 1
-            }
-            this.monthString=this.months[this.month]
-            this.render(this.year, this.month)
-        },
-        // 选中日期
-        select(k1, k2, e) {
-            if (e != undefined) e.stopPropagation()
-                // 日期范围
-            if (this.range) {
-                if (this.rangeBegin.length == 0 || this.rangeEndTemp != 0) {
-                    this.rangeBegin = [this.year, this.month, this.days[k1][k2].day, this.hour, this.minute, this.second]
-                    this.rangeBeginTemp = this.rangeBegin
-                    this.rangeEnd = [this.year, this.month, this.days[k1][k2].day, this.hour, this.minute, this.second]
-                    this.rangeEndTemp = 0
-                } else {
-                    this.rangeEnd = [this.year, this.month, this.days[k1][k2].day, this.hour, this.minute, this.second]
-                    this.rangeEndTemp = 1
-                        // 判断结束日期小于开始日期则自动颠倒过来
-                    if (+new Date(this.rangeEnd[0], this.rangeEnd[1], this.rangeEnd[2]) < +new Date(this.rangeBegin[0], this.rangeBegin[1], this.rangeBegin[2])) {
-                        this.rangeBegin = this.rangeEnd
-                        this.rangeEnd = this.rangeBeginTemp
-                    }
-                }
-                this.render(this.year, this.month)
-            } else {
-                // 取消上次选中
-                if (this.today.length > 0) {
-                    this.days[this.today[0]][this.today[1]].selected = false
-                }
-                // 设置当前选中天
-                this.days[k1][k2].selected = true
-                this.day = this.days[k1][k2].day
-                this.today = [k1, k2]
-                if (this.type == 'date') {
-                    this.value = this.year + this.sep + this.zero(this.month + 1) + this.sep + this.zero(this.days[k1][k2].day)
-                    this.show = false
-                }
-            }
-
-        },
-        // 多选的时候提交
-        ok() {
-            // 只有有日期的时候才执行
-            if(this.type!="time"){
-                let isSelected=false
-                this.days.forEach(v=>{
-                    v.forEach(vv=>{
-                        if(vv.selected){
-                            isSelected=true
-                        }
-                    })
-                })
-                if(!isSelected)return false
-            }
-           
-            if (this.range) {
-                this.value = this.output(this.rangeBegin) + " ~ " + this.output(this.rangeEnd)
-            } else {
-                this.value = this.output([
-                    this.year,
-                    this.month, 
-                    this.day,
-                    parseInt(this.hour),
-                    parseInt(this.minute),
-                    parseInt(this.second)
-                ])
-            }
-            this.show = false
-        },
-        // 隐藏控件
-        cancel() {
-            this.show = false
-        },
-        // 格式化输出
-        output(args) {
-            if (this.type == 'time') {
-                return this.zero(args[3]) + ":" + this.zero(args[4]) + ":" + this.zero(args[5])
-            }
-            if (this.type == 'datetime') {
-                return args[0] + this.sep + this.zero(args[1] + 1) + this.sep + this.zero(args[2]) + " " + this.zero(args[3]) + ":" + this.zero(args[4]) + ":" + this.zero(args[5])
-            }
-            if (this.type == 'date') {
-                return args[0] + this.sep + this.zero(args[1] + 1) + this.sep + this.zero(args[2])
-            }
-        }
+    rangeStatus: {
+      type: Number,
+      default: 0
     }
-}
+  },
+  mounted () {
+    this._blur = (e) => {
+      if (!this.$el.contains(e.target) && this.hasInput) this.close()
+    }
+  this.$emit('child-created', this)
+    // this.inputValue = this.value
+    // this.dateFormat = this.format
+    this.currDate = this.parse(this.inputValue) || this.parse(new Date())
+    const year = this.currDate.getFullYear()
+    const month = this.currDate.getMonth()
+    this.changePane(year, month, this.pane)
+    if (!this.hasInput) {
+      this.displayDayView = true
+      this.updatePaneStyle()
+    }
+    if (this.rangeStatus) {
+      this.eventbus = this.rangeBus()
+      if (typeof this.eventbus === 'object' && !this.eventbus.$on) {
+        console.warn('Calendar rangeBus doesn\'t exist')
+        this.rangeStatus = 0
+      }
+    }
+    if (this.rangeStatus === 2) {
+      this._updateRangeStart = (date) => {
+        this.rangeStart = date
+        this.currDate = date
+        this.inputValue = this.stringify(this.currDate)
+      }
+      this.eventbus.$on('calendar-rangestart', this._updateRangeStart)
+    }
+    document.addEventListener('click', this._blur)
+  },
+  beforeDestroy () {
+    document.removeEventListener('click', this._blur)
+    if (this.rangeStatus === 2) {
+      this.eventbus.$off('calendar-rangestart', this._updateRangeStart)
+    }
+  },
+  data () {
+    return {
+      inputValue: this.value,
+      dateFormat: this.format,
+      currDate: new Date(),
+      dateRange: [],
+      decadeRange: [],
+      paneStyle: {
+        width: ''
+      },
+      displayDayView: false,
+      displayMonthView: false,
+      displayYearView: false,
+      rangeStart: false,
+      rangeEnd: false
+    }
+  },
+  watch: {
+    currDate () {
+      this.getDateRange()
+    }
+  },
+  computed: {
+    text () {
+      return this.translations(this.lang)
+    }
+  },
+  methods: {
+    handleMouseOver (event) {
+      let target = event.target
+      // this.rangeEnd = false
+      if (!this.rangeStart) {
+        return true
+      }
+      if (event.type === 'mouseout') {
+        return true
+      }
+      while (this.$el.contains(target) && !~target.className.indexOf('day-cell')) {
+        target = target.parentNode
+      }
+      if (~target.className.indexOf('day-cell') && !~target.className.indexOf('datepicker-item-gray')) {
+        const rangeEnd = target.getAttribute('data-date')
+        if (this.rangeStart < this.parse(rangeEnd)) {
+          this.rangeEnd = this.parse(rangeEnd)
+        }
+      }
+    },
+    getItemClasses (d) {
+      const clazz = []
+      clazz.push(d.sclass)
+      if (this.rangeStart && this.rangeEnd && d.sclass !== 'datepicker-item-gray') {
+        if (d.date > this.rangeStart && d.date < this.rangeEnd) {
+          clazz.push('daytoday-range')
+        }
+        /* eslint-disable eqeqeq */
+        if (this.stringify(d.date) == this.stringify(this.rangeStart)) {
+          clazz.push('daytoday-start')
+        }
+        /* eslint-disable eqeqeq */
+        if (this.stringify(d.date) == this.stringify(this.rangeEnd)) {
+          clazz.push('daytoday-end')
+        }
+      }
+      return clazz.join(' ')
+    },
+    translations (lang) {
+      lang = lang || 'en'
+      let text = {
+        daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        limit: 'Limit reached ({{limit}} items max).',
+        loading: 'Loading...',
+        minLength: 'Min. Length',
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        notSelected: 'Nothing Selected',
+        required: 'Required',
+        search: 'Search'
+      }
+      return window.VueCalendarLang ? window.VueCalendarLang(lang) : text
+    },
+    close () {
+      this.displayDayView = this.displayMonthView = this.displayYearView = false
+    },
+    inputClick () {
+      this.currDate = this.parse(this.inputValue) || this.parse(new Date())
+      if (this.displayMonthView || this.displayYearView) {
+        this.displayDayView = false
+      } else {
+        this.displayDayView = !this.displayDayView
+      }
+      this.updatePaneStyle()
+    },
+    updatePaneStyle () {
+      if (!(this.displayMonthView || this.displayYearView)) {
+        this.$nextTick(function () {
+          let offsetLeft = this.$el.offsetLeft
+          let offsetWidth = this.$el.querySelector('.datepicker-inner').offsetWidth
+          let popWidth = this.pane * offsetWidth + this.borderWidth // add border
+          this.paneStyle.width = popWidth + 'px'
+          if (this.hasInput) {
+            if (popWidth + offsetLeft > document.documentElement.clientWidth) {
+              this.paneStyle.right = '0px'
+            }
+          } else {
+            this.paneStyle.position = 'initial'
+          }
+          this.$forceUpdate()
+        })
+      }
+    },
+    preNextDecadeClick (flag) {
+      const year = this.currDate.getFullYear()
+      const months = this.currDate.getMonth()
+      const date = this.currDate.getDate()
+      if (flag === 0) {
+        this.currDate = new Date(year - 10, months, date)
+      } else {
+        this.currDate = new Date(year + 10, months, date)
+      }
+    },
+    preNextMonthClick (flag) {
+      const year = this.currDate.getFullYear()
+      const month = this.currDate.getMonth()
+      const date = this.currDate.getDate()
+      if (flag === 0) {
+        const preMonth = this.getYearMonth(year, month - 1)
+        this.currDate = new Date(preMonth.year, preMonth.month, date)
+        this.changePane(preMonth.year, preMonth.month, this.pane)
+      } else {
+        const nextMonth = this.getYearMonth(year, month + 1)
+        this.currDate = new Date(nextMonth.year, nextMonth.month, date)
+        this.changePane(nextMonth.year, nextMonth.month, this.pane)
+      }
+    },
+    preNextYearClick (flag) {
+      const year = this.currDate.getFullYear()
+      const months = this.currDate.getMonth()
+      const date = this.currDate.getDate()
+      if (flag === 0) {
+        this.currDate = new Date(year - 1, months, date)
+      } else {
+        this.currDate = new Date(year + 1, months, date)
+      }
+    },
+    yearSelect (year) {
+      this.displayYearView = false
+      this.displayMonthView = true
+      this.currDate = new Date(year, this.currDate.getMonth(), this.currDate.getDate())
+    },
+    daySelect (date, event) {
+      let el = event.target
+      if (el.classList[0] === 'datepicker-item-disable') {
+        return false
+      } else {
+        if (this.hasInput) {
+          this.currDate = date
+          this.inputValue = this.stringify(this.currDate)
+          this.displayDayView = false
+          if (this.rangeStatus === 1) {
+            this.eventbus.$emit('calendar-rangestart', this.currDate)
+          }
+        } else {
+          this.onDayClick(date, this.stringify(date))
+        }
+      }
+    },
+    switchMonthView () {
+      this.displayDayView = false
+      this.displayMonthView = true
+    },
+    switchDecadeView () {
+      this.displayMonthView = false
+      this.displayYearView = true
+    },
+    monthSelect (year, index) {
+      this.displayMonthView = false
+      this.displayDayView = true
+      this.currDate = new Date(year, index, this.currDate.getDate())
+      this.changePane(year, index, this.pane)
+    },
+    getYearMonth (year, month) {
+      if (month > 11) {
+        year++
+        month = 0
+      } else if (month < 0) {
+        year--
+        month = 11
+      }
+      return {year: year, month: month}
+    },
+    getSpecailDay (v) {
+      return this.specialDays[this.stringify(v)]
+    },
+    stringifyDecadeHeader (date, pan) {
+      const yearStr = date.getFullYear().toString()
+      const firstYearOfDecade = parseInt(yearStr.substring(0, yearStr.length - 1) + 0, 10) + (pan * 10)
+      const lastYearOfDecade = parseInt(firstYearOfDecade, 10) + 10
+      return firstYearOfDecade + '-' + lastYearOfDecade
+    },
+    siblingsMonth (v, n) {
+      return new Date(v.getFullYear(), v.getMonth() * 1 + n)
+    },
+    stringifyDayHeader (date, month = 0) {
+      const d = this.siblingsMonth(date, month)
+      return this.text.months[d.getMonth()] + ' ' + d.getFullYear()
+    },
+    parseMonth (date) {
+      return this.text.months[date.getMonth()]
+    },
+    stringifyYearHeader (date, year = 0) {
+      return date.getFullYear() + year
+    },
+    stringify (date, format = this.dateFormat) {
+      if (!date) date = this.parse()
+        if (!date) return ''
+          const year = date.getFullYear()
+        const month = date.getMonth() + 1
+        const day = date.getDate()
+        const monthName = this.parseMonth(date)
+        return format
+        .replace(/yyyy/g, year)
+        .replace(/MMMM/g, monthName)
+        .replace(/MMM/g, monthName.substring(0, 3))
+        .replace(/MM/g, ('0' + month).slice(-2))
+        .replace(/dd/g, ('0' + day).slice(-2))
+        .replace(/yy/g, year)
+        .replace(/M(?!a)/g, month)
+        .replace(/d/g, day)
+      },
+      parse (str = this.inputValue) {
+        let date
+        if (str.length === 10 && (this.dateFormat === 'dd-MM-yyyy' || this.dateFormat === 'dd/MM/yyyy')) {
+          date = new Date(str.substring(6, 10), str.substring(3, 5) - 1, str.substring(0, 2))
+        } else {
+          date = new Date(str)
+          date.setHours(0, 0, 0)
+        }
+        return isNaN(date.getFullYear()) ? new Date() : date
+      },
+      getDayCount (year, month) {
+        const dict = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        if (month === 1) {
+          if ((year % 400 === 0) || (year % 4 === 0 && year % 100 !== 0)) {
+            return 29
+          }
+        }
+        return dict[month]
+      },
+      getDateRange () {
+        this.dateRange = []
+        this.decadeRange = []
+        for (let p = 0; p < this.pane; p++) {
+          let currMonth = this.siblingsMonth(this.currDate, p)
+          let time = {
+            year: currMonth.getFullYear(),
+            month: currMonth.getMonth()
+          }
+          let yearStr = time.year.toString()
+          this.decadeRange[p] = []
+          let firstYearOfDecade = (yearStr.substring(0, yearStr.length - 1) + 0) - 1
+          for (let i = 0; i < 12; i++) {
+            this.decadeRange[p].push({
+              text: firstYearOfDecade + i + p * 10
+            })
+          }
+          this.dateRange[p] = []
+          const currMonthFirstDay = new Date(time.year, time.month, 1)
+          let firstDayWeek = currMonthFirstDay.getDay() + 1
+          if (firstDayWeek === 0) {
+            firstDayWeek = 7
+          }
+          const dayCount = this.getDayCount(time.year, time.month)
+          if (firstDayWeek > 1) {
+            const preMonth = this.getYearMonth(time.year, time.month - 1)
+            const prevMonthDayCount = this.getDayCount(preMonth.year, preMonth.month)
+            for (let i = 1; i < firstDayWeek; i++) {
+              const dayText = prevMonthDayCount - firstDayWeek + i + 1
+              this.dateRange[p].push({
+                text: dayText,
+                date: new Date(preMonth.year, preMonth.month, dayText),
+                sclass: 'datepicker-item-gray'
+              })
+            }
+          }
+          for (let i = 1; i <= dayCount; i++) {
+            const date = new Date(time.year, time.month, i)
+            const week = date.getDay()
+            let sclass = ''
+            this.disabledDaysOfWeek.forEach((el) => {
+              if (week === parseInt(el, 10)) sclass = 'datepicker-item-disable'
+            })
+            if (i === this.currDate.getDate()) {
+              if (this.inputValue) {
+                const valueDate = this.parse(this.inputValue)
+                if (valueDate) {
+                  if (valueDate.getFullYear() === time.year && valueDate.getMonth() === time.month) {
+                    sclass = 'datepicker-dateRange-item-active'
+                  }
+                }
+              }
+            }
+            this.dateRange[p].push({
+              text: i,
+              date: date,
+              sclass: sclass
+            })
+          }
+          if (this.dateRange[p].length < 42) {
+            const nextMonthNeed = 42 - this.dateRange[p].length
+            const nextMonth = this.getYearMonth(time.year, time.month + 1)
+            for (let i = 1; i <= nextMonthNeed; i++) {
+              this.dateRange[p].push({
+                text: i,
+                date: new Date(nextMonth.year, nextMonth.month, i),
+                sclass: 'datepicker-item-gray'
+              })
+            }
+          }
+        }
+      }
+    }
+  }
 </script>
- 
+
+<style lang="scss">
+  @mixin clearfix() {
+    &:before,
+    &:after {
+      content: " "; // 1
+      display: table; // 2
+    }
+    &:after {
+      clear: both;
+    }
+  }
+  .datepicker{
+    position: relative;
+    display: inline-block;
+
+  }
+  input.datepicker-input.with-reset-button {
+    padding-right: 25px;
+  }
+  .datepicker > button.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    outline: none;
+    z-index: 2;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+  }
+  .datepicker > button.close:focus {
+    opacity: .2;
+  }
+  .datepicker-popup{
+    position: absolute;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fff;
+    margin-top: 2px;
+    z-index: 1000;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    @include clearfix;
+  }
+  .datepicker-inner{
+    width: 218px;
+    float: left;
+  }
+  .datepicker-body{
+    padding: 10px 10px;
+    text-align: center;
+  }
+  .datepicker-ctrl p,
+  .datepicker-ctrl span,
+  .datepicker-body span{
+    display: inline-block;
+    width: 28px;
+    line-height: 28px;
+    height: 28px;
+    // border-radius: 4px;
+  }
+  .datepicker-ctrl p {
+    width: 65%;
+  }
+  .datepicker-ctrl span {
+    position: absolute;
+  }
+  .datepicker-body span {
+    text-align: center;
+  }
+  .datepicker-monthRange span{
+    width: 48px;
+    height: 50px;
+    line-height: 45px;
+  }
+  .datepicker-item-disable {
+    background-color: white!important;
+    cursor: not-allowed!important;
+  }
+  .decadeRange span:first-child,
+  .decadeRange span:last-child,
+  .datepicker-item-disable,
+  .datepicker-item-gray{
+    color: #999;
+  }
+  .datepicker-dateRange-item-active:hover,
+  .datepicker-dateRange-item-active {
+    background: rgb(50, 118, 177)!important;
+    color: white!important;
+  }
+  .datepicker-monthRange {
+    margin-top: 10px
+  }
+  .datepicker-monthRange span,
+  .datepicker-ctrl span,
+  .datepicker-ctrl p,
+  .datepicker-dateRange span {
+    cursor: pointer;
+  }
+  .datepicker-monthRange span:hover,
+  .datepicker-ctrl p:hover,
+  .datepicker-ctrl i:hover,
+  .datepicker-dateRange span:hover,
+  .datepicker-dateRange-item-hover {
+    background-color : #eeeeee;
+  }
+  .datepicker-dateRange {
+    .daytoday-start,
+    .daytoday-start:hover,
+    .daytoday-end,
+    .daytoday-end:hover{
+      background: rgb(50, 118, 177)!important;
+      color: white!important;
+    }
+  }
+  .datepicker-dateRange .daytoday-range,
+  .datepicker-dateRange .daytoday-range:hover{
+    background-color: #ddd;
+  }
+  .datepicker-weekRange span{
+    font-weight: bold;
+  }
+  .datepicker-label{
+    background-color: #f8f8f8;
+    font-weight: 700;
+    padding: 7px 0;
+    text-align: center;
+  }
+  .datepicker-ctrl{
+    position: relative;
+    /*height: 30px;*/
+    line-height: 30px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .month-btn{
+    font-weight: bold;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+  }
+  .datepicker-preBtn{
+    left: 2px;
+  }
+  .datepicker-nextBtn{
+    right: 2px;
+  }
+</style>

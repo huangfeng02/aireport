@@ -9,7 +9,7 @@
                  </span>
                      </a>
                      <ul class="treeview-menu">
-                         <li v-for="sub in item.subMenu"><a href="{{sub.dataUrl}}"><i class="fa fa-genderless"></i>{{sub.menuName}}</a></li>
+                         <li v-for="sub in item.subMenu"><a v-bind:href="sub.dataUrl"><i class="fa fa-genderless"></i>{{sub.menuName}}</a></li>
                      </ul>
                  </li>
              </ul>
@@ -24,7 +24,7 @@
                 items:""
             }
         },
-        ready:function(){
+        mounted:function(){
             var self=this;
             $.ajax({
                 url: '/airlogis/sys/authority/getMenuTree?menuCode=0',

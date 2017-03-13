@@ -1,7 +1,8 @@
 <template>
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <a class="btn btn-sm btn-primary pull-right" v-link="{name:'orderDetails'}">新增订单录入</a>
+        <router-link class="btn btn-sm btn-primary pull-right" :to="{name:'orderDetails'}">新增订单录入</router-link>
+
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i>首页</a></li>
             <li><a href="#">订单管理</a></li>
@@ -55,7 +56,7 @@
                             </tr>
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td><a v-link="{name:'orderDetails'}">0909</a></td>
+                                <td><router-link :to="{name:'orderDetails'}">0909</router-link></td>
                                 <td>999-70123211</td>
                                 <td>LWL-2016060101</td>
                                 <td>富士康</td>
@@ -70,7 +71,7 @@
 
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td><a v-link="{name:'orderDetails'}">0909</a></td>
+                                <td><router-link :to="{name:'orderDetails'}">0909</router-link></td>
                                 <td>999-70123211</td>
                                 <td>LWL-2016060101</td>
                                 <td>富士康</td>
@@ -90,7 +91,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
             </div>
@@ -139,7 +140,28 @@
             }
         },
         components:{pagNav},
-        events: {
+        computed: {
+            checkedAll: {
+                get: function () {
+                    return this.checkedCount == this.items.length;
+                },
+                set: function (value) {
+                    if (value) {
+                        this.checkedIds = this.items.map(function (item) {
+                            return item.id
+                        })
+                    } else {
+                        this.checkedIds = []
+                    }
+                }
+            },
+            checkedCount: {
+                get: function () {
+                    return this.checkedIds.length;
+                }
+            }
+        },
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.listContact(searchDate);
@@ -183,30 +205,7 @@
                     }
                 })
 
-            }
-        },
-        computed: {
-            checkedAll: {
-                get: function () {
-                    return this.checkedCount == this.items.length;
-                },
-                set: function (value) {
-                    if (value) {
-                        this.checkedIds = this.items.map(function (item) {
-                            return item.id
-                        })
-                    } else {
-                        this.checkedIds = []
-                    }
-                }
             },
-            checkedCount: {
-                get: function () {
-                    return this.checkedIds.length;
-                }
-            }
-        },
-        methods:{
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -278,16 +277,9 @@
             }
 
         },
-        ready:function(){
+        mounted:function(){
+
         },
-        route:{
-            data: function(transition){
-
-
-                //  this.listContact()
-                // document.title = "用户登入"
-            }
-        }
 
     }
 

@@ -85,14 +85,14 @@
         props:['contractInfo'],
         methods:{
             update:function(){
-                this.$dispatch('update', this.contractInfo)
+                this.$emit('update', this.contractInfo)
 
             },
             submit:function(){
-                this.$dispatch('submit', this.contractInfo)
+                this.$emit('submit', this.contractInfo)
             }
         },
-        ready:function(){
+        mounted:function(){
             console.log(this.receiptInfo)
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {

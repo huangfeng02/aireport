@@ -4,9 +4,9 @@
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default" v-for="item in items">
-            <div class="panel-heading" role="tab" id="heading{{ $index }}">
+            <div class="panel-heading" role="tab" v-bind:id="'heading' + $index">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" class="center-block" data-parent="#accordion" href="#collapse{{ $index }}" aria-expanded="true" aria-controls="collapse{{ $index }}">
+                    <a data-toggle="collapse" class="center-block" data-parent="#accordion" v-bind:href="'#collapse' + $index" aria-expanded="true" aria-controls="collapse{{ $index }}">
                         {{item.menuName}}
                     </a>
                 </h4>

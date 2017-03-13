@@ -56,19 +56,19 @@
                 <div class="modal-body">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                         <div class="panel panel-default" v-for="item in items">
-                            <div class="panel-heading" role="tab" id="heading{{ $index }}">
+                            <div class="panel-heading" role="tab" v-bind:id="'heading' + $index">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" class="center-block" data-parent="#accordion" href="#collapse{{ $index }}" aria-expanded="true" aria-controls="collapse{{ $index }}">
+                                    <a data-toggle="collapse" class="center-block" data-parent="#accordion" v-bind:href="'#collapse' + $index" aria-expanded="true"  v-bind:aria-controls="'collapse' + $index">
                                         {{item.menuName}}
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse{{ $index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ $index }}">
+                            <div v-bind:id="'collapse' + $index" class="panel-collapse collapse" role="tabpanel"  v-bind:aria-labelledby="'heading' + $index">
                                 <div class="panel-body">
                                     <div class="form-group">
-                                        <div class="checkbox" v-for="sub in item.subMenu">
+                                        <div class="checkbox" v-for="(sub,index) in item.subMenu">
                                             <label>
-                                                <input type="checkbox" v-model="menuCodes" value="{{sub.menuCode}}">
+                                                <input type="checkbox" v-model="menuCodes"  v-bind:value="sub.menuCode">
                                                 {{sub.menuName}}
                                             </label>
                                         </div>
@@ -129,10 +129,10 @@
                 })
             },
             submit: function (event) {
-                this.$dispatch('submit', this.roleInfo)
+                this.$emit('submit', this.roleInfo)
             },
             update:function(data){
-                this.$dispatch('update', this.roleInfo)
+                this.$emit('update', this.roleInfo)
             },
             list:function(){
                 var _this=this;
@@ -148,7 +148,7 @@
                 })
             }
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             this.list()
             $('#myModal').on('hidden.bs.modal', function (e) {

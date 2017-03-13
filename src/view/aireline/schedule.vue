@@ -74,8 +74,8 @@
                                 <td>{{ item.arrivalTime }}</td>
                                 <td>{{ item.aircraftModel }}</td>
                                 <td>{{ item.schedule }}</td>
-                                <td>{{ item.startTime|reverse 3 }}</td>
-                                <td>{{ item.endTime|reverse 3 }}</td>
+                                <td>{{ item.startTime|reverse(3) }}</td>
+                                <td>{{ item.endTime|reverse(3)}}</td>
                                 <td>
                                     <i class="fa fa-fw fa-trash-o" @click="del(item.id)" title="删除"></i>
                                     <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update"  @click="findById(item.id)" title="编辑"></i>
@@ -88,7 +88,7 @@
 
                 <!--分页-->
                 <div id="pagination">
-                    <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                    <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
                 </div>
 
             </div>
@@ -127,10 +127,29 @@
                 scheduleInfo:''
             }
         },
-        ready:function(){
-
+        computed: {
+            checkedAll: {
+                get: function () {
+                    return this.checkedCount == this.items.length;
+                },
+                set: function (value) {
+                    if (value) {
+                        this.checkedIds = this.items.map(function (item) {
+                            return item.id
+                        })
+                    } else {
+                        this.checkedIds = []
+                    }
+                }
+            },
+            checkedCount: {
+                get: function () {
+                    return this.checkedIds.length;
+                }
+            }
         },
-        events: {
+        components:{pagNav,scheduleModal,scheduleModalImport},
+        methods:{
             pagechange: function (p) {
                 searchDate.pageNum=p;
                 this.listAirport(searchDate);
@@ -176,31 +195,7 @@
             },
             import:function(){
                 $('#importModal').modal('hide')
-            }
-        },
-        computed: {
-            checkedAll: {
-                get: function () {
-                    return this.checkedCount == this.items.length;
-                },
-                set: function (value) {
-                    if (value) {
-                        this.checkedIds = this.items.map(function (item) {
-                            return item.id
-                        })
-                    } else {
-                        this.checkedIds = []
-                    }
-                }
             },
-            checkedCount: {
-                get: function () {
-                    return this.checkedIds.length;
-                }
-            }
-        },
-        components:{pagNav,scheduleModal,scheduleModalImport},
-        methods:{
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -262,14 +257,9 @@
             }
 
         },
-        route:{
-            data: function(transition){
-                this.list()
-                // document.title = "用户登入"
-
-            }
+        created: function(){
+            this.list()
         }
-
     }
 
 </script>

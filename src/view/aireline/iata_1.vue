@@ -43,7 +43,7 @@
             <!-- /.box -->
             <!--分页-->
             <div id="pagination1">
-                <pag-nav :total="total" :display="display" :current.sync="current"></pag-nav>
+                <pag-nav :total="total" :display="display" :current="current" v-on:pagechange="pagechange"></pag-nav>
             </div>
 
 
@@ -104,7 +104,6 @@
 </template>
 
 <script>
-    console.log(1)
     import pagNav from '../../components/pagination.vue'
     import util from '../../components/util.js'
     export default {
@@ -124,13 +123,7 @@
             }
         },
         components:{pagNav},
-        events:{
-            pagechange: function (p) {
-                console.log(p,1)
-                this.current=p;
-                this.list();
-            }
-        },
+
         computed: {
             checkedAll: {
                 get: function () {
@@ -153,6 +146,11 @@
             }
         },
         methods:{
+            pagechange: function (p) {
+                console.log(p,1)
+                this.current=p;
+                this.list();
+            },
             del: function (id) {
                 var _this=this;
                 $.ajax({
@@ -241,7 +239,7 @@
             }
 
         },
-        ready:function(){
+        mounted:function(){
             var _this=this;
             $('#myModal').on('hidden.bs.modal', function (e) {
                 //重置属性值为空
