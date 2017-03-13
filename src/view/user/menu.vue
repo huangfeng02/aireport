@@ -1,5 +1,5 @@
 <template>
-
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <button data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-primary pull-right" type="button">添加菜单</button>
@@ -69,7 +69,7 @@
     <!-- /.content -->
     <!-- Modal -->
     <menu-modal :menu-info="menuInfo"></menu-modal>
-
+    </div>
 </template>
 
 <script>

@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <router-link class="btn btn-sm btn-primary pull-right" :to="{name:'orderDetails'}">新增订单录入</router-link>
@@ -100,6 +101,8 @@
 
 
     </section>
+
+    </div>
 
 <!--
     <list-modal :rule-info="ruleInfo"></list-modal>

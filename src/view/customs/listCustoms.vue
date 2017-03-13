@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
 
@@ -97,6 +98,7 @@
                                     <i class="fa fa-fw fa-trash-o" title="删除"></i>
                                     <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update" title="编辑"></i>
                                 </td>
+                            </tr>
                             <!-- <tr v-for="item in items">
                                  <td><input type="checkbox" :value="item.id" v-model="checkedIds"></td>
                                  <td>{{ item.supplierId }}</td>
@@ -131,7 +133,7 @@
     </section>
 
     <list-modal :rule-info="ruleInfo"></list-modal>
-
+    </div>
 </template>
 
 <script>

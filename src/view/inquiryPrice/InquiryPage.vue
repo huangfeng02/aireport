@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
 
@@ -216,7 +217,7 @@
 
     </section>
 
-
+    </div>
 </template>
 
 <script>

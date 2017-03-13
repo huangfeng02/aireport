@@ -17,7 +17,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" @click="import" class="btn btn-primary">提交</button>
+                    <button type="button" @click="action_import" class="btn btn-primary">提交</button>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
         },
         //props:['airportInfo'],
         methods:{
-            import:function(){
+            action_import:function(){
                 this.$emit('import')
             }
         },

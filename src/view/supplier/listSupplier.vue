@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <button data-toggle="modal" data-target="#importModal" style="margin-left: 10px;display: none" class="btn btn-sm btn-primary pull-right" type="button">批量导入</button>
@@ -73,9 +74,9 @@
                                 <td>{{ item.businessLicense }}</td>
                                 <td>{{ item.status }}</td>
                                 <td>
-                                    <router-link :to="name:'listContact',query:{supplierId:item.id}}">联系人</router-link>
-                                    <router-link :to="name:'listReceipt',query:{supplierId:item.id}}">开票信息</router-link>
-                                    <router-link :to="name:'listContract',query:{supplierId:item.id}}">合同列表</router-link>
+                                    <router-link :to="{name:'listContact',query:{supplierId:item.id}}">联系人</router-link>
+                                    <router-link :to="{name:'listReceipt',query:{supplierId:item.id}}">开票信息</router-link>
+                                    <router-link :to="{name:'listContract',query:{supplierId:item.id}}">合同列表</router-link>
                                 </td>
                                 <td>
                                     <i class="fa fa-fw fa-trash-o" @click="del(item.id)" title="删除"></i>
@@ -101,6 +102,8 @@
     </section>
 
     <list-modal :supplier-info="supplierInfo"></list-modal>
+
+    </div>
 
 </template>
 

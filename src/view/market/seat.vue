@@ -1,4 +1,5 @@
 <template>
+    <div>
     <section class="content-header">
          <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i>首页</a></li>
@@ -54,6 +55,8 @@
 
 
     </section>
+
+    </div>
 
 </template>
 

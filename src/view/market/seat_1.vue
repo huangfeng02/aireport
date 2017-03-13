@@ -1,5 +1,5 @@
 <template>
-
+    <div>
 
     <div class="box-header with-border clearfix">
         <button type="button"  class="btn btn-sm btn-warning" @click="delAll">删除</button>
@@ -127,7 +127,7 @@
         </div>
     </div>
 
-
+    </div>
 
 </template>
 

@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
 
@@ -68,7 +69,7 @@
                                     <i class="fa fa-fw fa-trash-o" title="删除"></i>
                                     <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update" title="编辑"></i>
                                 </td>
-                            <tr>
+                            </tr>
 
                             <tr>
                                 <td><input type="checkbox"></td>
@@ -82,7 +83,7 @@
                                     <i class="fa fa-fw fa-trash-o" title="删除"></i>
                                     <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update" title="编辑"></i>
                                 </td>
-                            <tr>
+                            </tr>
 
 
                             </tbody>
@@ -103,7 +104,7 @@
     </section>
 
     <list-modal :info="info"></list-modal>
-
+    </div>
 </template>
 
 <script>

@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <button data-toggle="modal" data-target="#importModal" style="margin-left: 10px;display: none" class="btn btn-sm btn-primary pull-right" type="button">批量导入</button>
@@ -123,7 +124,7 @@
     </section>
 
     <list-modal :statistics-info="statisticsInfo"></list-modal>
-
+    </div>
 </template>
 
 <script>

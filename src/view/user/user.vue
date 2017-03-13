@@ -1,5 +1,5 @@
 <template>
-
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <button data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-primary pull-right" type="button">添加用户</button>
@@ -79,7 +79,7 @@
 
     <!-- Modal -->
     <user-modal :user-info="userInfo" :departments="departments" :roles="roles"></user-modal>
-
+    </div>
 </template>
 
 <script>

@@ -9,7 +9,7 @@
         <span>&times;</span>
       </button>
     </template>
-    <div class="datepicker-popup" :style="paneStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOver" v-show="displayDayView">
+    <div class="datepicker-popup clearfix" :style="paneStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOver" v-show="displayDayView">
       <div class="datepicker-ctrl">
         <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextMonthClick(0)"></span>
         <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextMonthClick(1)"></span>
@@ -36,7 +36,7 @@
         </div>
       </template>
     </div>
-    <div class="datepicker-popup" :style="paneStyle" v-show="displayMonthView">
+    <div class="datepicker-popup clearfix" :style="paneStyle" v-show="displayMonthView">
       <div class="datepicker-ctrl">
         <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextYearClick(0)"></span>
         <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextYearClick(1)"></span>
@@ -58,7 +58,7 @@
         </div>
       </template>
     </div>
-    <div class="datepicker-popup" :style="paneStyle" v-show="displayYearView">
+    <div class="datepicker-popup clearfix" :style="paneStyle" v-show="displayYearView">
       <div class="datepicker-ctrl">
         <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextDecadeClick(0)"></span>
         <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextDecadeClick(1)"></span>
@@ -511,8 +511,8 @@
   }
 </script>
 
-<style lang="scss">
-  @mixin clearfix() {
+<style type="text/css">
+  /*@mixin clearfix() {
     &:before,
     &:after {
       content: " "; // 1
@@ -521,11 +521,19 @@
     &:after {
       clear: both;
     }
+  }*/
+  clearfix:before,
+  .clearfix:after {
+      display: table;
+      line-height: 0;
+      content: "";
+  }
+  .clearfix:after {
+      clear: both;
   }
   .datepicker{
     position: relative;
     display: inline-block;
-
   }
   input.datepicker-input.with-reset-button {
     padding-right: 25px;
@@ -553,7 +561,6 @@
     margin-top: 2px;
     z-index: 1000;
     box-shadow: 0 6px 12px rgba(0,0,0,0.175);
-    @include clearfix;
   }
   .datepicker-inner{
     width: 218px;
@@ -570,7 +577,9 @@
     width: 28px;
     line-height: 28px;
     height: 28px;
+/*
     // border-radius: 4px;
+*/
   }
   .datepicker-ctrl p {
     width: 65%;
@@ -617,15 +626,12 @@
   .datepicker-dateRange-item-hover {
     background-color : #eeeeee;
   }
-  .datepicker-dateRange {
-    .daytoday-start,
-    .daytoday-start:hover,
-    .daytoday-end,
-    .daytoday-end:hover{
+  .datepicker-dateRange .daytoday-start,.datepicker-dateRange .daytoday-start:hover,.datepicker-dateRange
+  .daytoday-end,.datepicker-dateRange .daytoday-end:hover{
       background: rgb(50, 118, 177)!important;
       color: white!important;
-    }
   }
+
   .datepicker-dateRange .daytoday-range,
   .datepicker-dateRange .daytoday-range:hover{
     background-color: #ddd;

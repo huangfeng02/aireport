@@ -1,5 +1,5 @@
 <template>
-
+    <div>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-cm" role="document">
             <div class="modal-content" id="addForm">
@@ -89,12 +89,12 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" @click="import" class="btn btn-primary">提交</button>
+                    <button type="button" @click="action_import" class="btn btn-primary">提交</button>
                 </div>
             </div>
         </div>
     </div>
-
+    </div>
 
 
 </template>
@@ -116,7 +116,7 @@
             submit:function(){
                 this.$emit('submit', this.transitPrice)
             },
-            import: function () {
+            action_import: function () {
                 var _this=this;
                 $.ajax({
                     url: '/airlogis/market/transitprice/importTransitPrice',

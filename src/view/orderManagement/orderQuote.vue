@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <ol class="breadcrumb">
@@ -119,6 +120,8 @@
         </div>
 
     </section>
+
+    </div>
 
 </template>
 

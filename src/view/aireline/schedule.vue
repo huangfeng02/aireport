@@ -1,5 +1,5 @@
 <template>
-
+    <div>
     <section class="content-header">
         <button data-toggle="modal" data-target="#importModal" style="margin-left: 10px;" class="btn btn-sm btn-primary pull-right" type="button">批量导入</button>
 
@@ -101,7 +101,7 @@
     <schedule-modal :schedule-info="scheduleInfo"></schedule-modal>
 
     <schedule-modal-import></schedule-modal-import>
-
+    </div>
 </template>
 
 <script>

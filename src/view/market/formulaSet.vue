@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <button data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-primary pull-right" type="button">添加</button>
@@ -76,7 +77,7 @@
 
     <formula-modal :formula-info="formulaInfo"></formula-modal>
 
-
+    </div>
 </template>
 
 <script>

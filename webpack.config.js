@@ -1,53 +1,116 @@
-/**
- * Created by huangfeng on 2016/8/16.
- */
-var Webpack = require("webpack");
-var path = require('path');
+const {resolve} = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-module.exports = {
-    entry: {
-        main: './src/main.js'
-    },
-    output: {
-        path: path.join(__dirname, './dist'),
-        // 文件地址，使用绝对路径形式
-        filename: '[name].js',
-        //[name]这里是webpack提供的根据路口文件自动生成的名字
-        publicPath: '/airport/dist/',
-        chunkFilename: "[id].chunk.js"//非主入口的文件名(异步组件)不会被打包到entry里
-    },
-    devServer: {
-        historyApiFallback: true,
-        hot: false,
-        inline: true,
-        grogress: true
-    },
-    module: {
-        loaders: [
-            {test: /\.vue$/, loader: 'vue'},
-            {test: /\.(png|jpg|gif)$/,exclude: /src/,loader: "url-loader?limit=8192&name=./img/[name].[ext]"},
-            {test:/\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
-            // 添加到这！并且会按照文件大小, 或者转化为 base64, 或者单独作为文件
-            //在大小限制后可以加上&name=./[name].[ext]，会将我们的文件生成在设定的文件夹下
-            {test: /\.js$/, exclude: /node_modules/,loader: "babel"}//es6转换es5
-        ]
-    },
-    babel: {
-        presets: ['es2015'],
-        plugins: ['transform-runtime']
-    },
-    plugins: [
-        new Webpack.BannerPlugin("这里是打包文件头部注释！"),//注意这是一个数组..
-        new ExtractTextPlugin('css/style.css')// 提取入口文件即 index.js 文件 import 'xxx.css' 为qili.css
-    ],
-    resolve: {
-        //root: path.join(__dirname, "./"),
-        alias: {
-            root: path.join(__dirname, "./"),
-            'vue': 'vue/dist/vue.js'
-            //import Vue from 'vue'//package.json 中的 main 属性决定了，当项目被引入时，输出的是哪个文件，而 vue 的 package.json 中的 main 指向的是 dist/vue.common.js。
+
+const url = require('url')
+const publicPath = ''
+module.exports = (options = {}) => ({
+  entry: {
+    main: './src/main.js'
+  },
+  output: {
+    path: resolve(__dirname, 'dist'),
+    filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
+/*
+    chunkFilename: '[id].js?[chunkhash]',
+*/
+    chunkFilename: '[id].js',
+/*
+    publicPath: options.dev ? '/assets/' : publicPath
+    publicPath: '/airport/dist/',
+ */
+      publicPath: '/dist/'
+  },
+  module: {
+    rules: [{
+        test: /\.vue$/,
+        use: ['vue-loader']
+      },
+      {
+        test: /\.js$/,
+        use: ['babel-loader'],
+        exclude: /node_modules/
+      },
+      {
+        test: /\.html$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            root: resolve(__dirname, 'src'),
+            attrs: ['img:src', 'link:href']
+          }
+        }]
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader']
+      },
+        {
+            test: /\.scss$/,
+            use: [{
+                loader: "style-loader" // creates style nodes from JS strings
+            }, {
+                loader: "css-loader" // translates CSS into CommonJS
+            }, {
+                loader: "sass-loader" // compiles Sass to CSS
+            }]
         },
-        extensions: ['', '.js', '.json', '.vue', '.scss', '.css']//配置省略文件扩展名的问题
+
+      {
+        test: /favicon\.png$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]?[hash]'
+          }
+        }]
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/,
+        exclude: /favicon\.png$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 10000
+          }
+        }]
+      }
+    ]
+  },
+  plugins: [
+   /* new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor', 'manifest']
+    }),*/
+      new webpack.optimize.UglifyJsPlugin({
+          compress: {
+              warnings: false
+          }
+      }),
+    /*new HtmlWebpackPlugin({
+      template: 'src/index.html'
+    })*/
+  ],
+  resolve: {
+    alias: {
+      '~': resolve(__dirname, 'src')
     }
-}
+  },
+  devServer: {
+    host: '127.0.0.1',
+    port: 8010,
+    proxy: {
+      '/api/': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
+    historyApiFallback: {
+      index: url.parse(options.dev ? '/assets/' : publicPath).pathname
+    }
+  },
+  //devtool: options.dev ? '#eval-source-map' : '#source-map'
+})

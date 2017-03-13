@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <button data-toggle="modal" data-target="#importModal" style="margin-left: 10px;display: none" class="btn btn-sm btn-primary pull-right" type="button">批量导入</button>
@@ -108,6 +109,7 @@
                                     <i class="fa fa-fw fa-wrench" data-toggle="modal" data-target="#myModal_update" title="编辑"></i>
                                     <a href="#">打回</a>
                                 </td>
+                            </tr>
                             <!-- <tr v-for="item in items">
                                  <td><input type="checkbox" :value="item.id" v-model="checkedIds"></td>
                                  <td>{{ item.supplierId }}</td>
@@ -142,7 +144,7 @@
     </section>
 
     <list-modal :rule-info="ruleInfo"></list-modal>
-
+    </div>
 </template>
 
 <script>

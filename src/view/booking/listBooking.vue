@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <button data-toggle="modal" data-target="#importModal" style="margin-left: 10px;display: none" class="btn btn-sm btn-primary pull-right" type="button">批量导入</button>
@@ -104,6 +105,7 @@
                                     <router-link :to="{name:'bookingReturn'}">打回</router-link>
 
                                 </td>
+                             </tr>
                             <!-- <tr v-for="item in items">
                                  <td><input type="checkbox" :value="item.id" v-model="checkedIds"></td>
                                  <td>{{ item.supplierId }}</td>
@@ -138,7 +140,7 @@
     </section>
 
     <list-modal :rule-info="ruleInfo"></list-modal>
-
+    </div>
 </template>
 
 <script>

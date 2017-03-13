@@ -1,5 +1,5 @@
 <template>
-
+    <div>
     <div class="box-header with-border clearfix">
         <button type="button"  class="btn btn-sm btn-warning" @click="delAll">删除</button>
         <button data-toggle="modal" data-target="#myModal3" class="btn btn-sm btn-primary pull-right" type="button">添加I</button>
@@ -94,7 +94,7 @@
         </div>
     </div>
 
-
+    </div>
 
 </template>
 

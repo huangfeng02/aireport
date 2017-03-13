@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <button data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-primary pull-right" type="button">添加</button>
@@ -96,7 +97,7 @@
 
     <price-rule-modal :price-rule="priceRule"></price-rule-modal>
 
-
+    </div>
 </template>
 
 <script>

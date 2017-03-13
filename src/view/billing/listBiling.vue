@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
 
@@ -119,7 +120,7 @@
 <!--
     <list-modal :info="info"></list-modal>
 -->
-
+    </div>
 </template>
 
 <script>
