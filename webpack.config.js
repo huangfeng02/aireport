@@ -40,5 +40,14 @@ module.exports = {
     plugins: [
         new Webpack.BannerPlugin("这里是打包文件头部注释！"),//注意这是一个数组..
         new ExtractTextPlugin('css/style.css')// 提取入口文件即 index.js 文件 import 'xxx.css' 为qili.css
-    ]
+    ],
+    resolve: {
+        //root: path.join(__dirname, "./"),
+        alias: {
+            root: path.join(__dirname, "./"),
+            'vue': 'vue/dist/vue.js'
+            //import Vue from 'vue'//package.json 中的 main 属性决定了，当项目被引入时，输出的是哪个文件，而 vue 的 package.json 中的 main 指向的是 dist/vue.common.js。
+        },
+        extensions: ['', '.js', '.json', '.vue', '.scss', '.css']//配置省略文件扩展名的问题
+    }
 }
